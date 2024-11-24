@@ -2,6 +2,6 @@
 using namespace std;
 
 int main (){
-    cout << "SUck my d";
+    cout << "SUck my duck";
     return 0;
 }
