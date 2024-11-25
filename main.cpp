@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <limits>
+#include <thread> // for sleep feauture
+#include <chrono> // for sleep feauture
 using namespace std;
 
 const int FLOOR_CNT = 100;
@@ -86,6 +89,11 @@ void Player::equipItem(string itemName)
 
 }
 
+void sleep()
+{
+    this_thread::sleep_for(std::chrono::milliseconds(1200));
+}
+
 int main()
 {
     
@@ -93,6 +101,26 @@ int main()
     cout << "Please name your character: ";
     cin >> name;
     Player player(name);
+    
+    // world building
+    cout << "「往上層去吧！」" << endl;
+    sleep();
+    cout << "模糊卻熟悉的聲音在夢裡迴響著" << endl;
+    sleep();
+    cout << "那時候的 " << player.getName() << " 大概還不滿 10 歲" << endl;
+    sleep();
+    cout << "下層的食糧資源已消耗殆盡" << endl;
+    sleep();
+    cout << "只有往上才有生存的希望" << endl;
+    sleep();
+    cout << "從此以後，便以到達最頂層為目標" << endl;
+    sleep();
+    cout << "請助 " << player.getName() << " 一臂之力吧" << endl << endl;
+    sleep();
+    cout << "【按下 Enter 以開始遊戲】" << endl;
+    
+    cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
+    std::cin.get();
 
     // Item listing
     Item note7("Note 7", 2, 2, 0.01, 0, 0, 0);
