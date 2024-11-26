@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <limits>
-#include <thread> // for sleep feauture
-#include <chrono> // for sleep feauture
+#include <thread> // for sleep feature
+#include <chrono> // for sleep feature
 using namespace std;
 
 const int FLOOR_CNT = 100;
@@ -10,8 +10,8 @@ const int FLOOR_CNT = 100;
 class Item
 {
     protected:
-		string name;
-		int attackChange;
+	    string name;
+	    int attackChange;
         int critAttackChange;
         int critChanceChange;
         int speedChange;
@@ -99,7 +99,7 @@ int main()
     
     string name;
     cout << "Please name your character: ";
-    cin >> name;
+    getline(cin, name);
     Player player(name);
     
     // world building
@@ -120,7 +120,7 @@ int main()
     cout << "【按下 Enter 以開始遊戲】" << endl;
     
     cin.ignore(std::numeric_limits<streamsize>::max(),'\n');
-    std::cin.get();
+    cin.get();
 
     // Item listing
     Item note7("Note 7", 2, 2, 0.01, 0, 0, 0);
