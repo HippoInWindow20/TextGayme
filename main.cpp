@@ -3,6 +3,7 @@
 #include <limits>
 #include <thread> // for sleep feature
 #include <chrono> // for sleep feature
+#include <stdlib.h>
 using namespace std;
 
 const int FLOOR_CNT = 100;
@@ -125,7 +126,7 @@ int main()
     cout << "【按下 Enter 以開始遊戲】" << endl;
     
     cin.get();
-
+    system("cls");
     // game
     for (int i = 0; i < FLOOR_CNT; i++)
     {
