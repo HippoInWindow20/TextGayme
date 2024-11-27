@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-const int FLOOR_CNT = 20;
+const int LAYER_CNT = 20;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -116,6 +116,7 @@ void Character::hit(double dmg)
     this->hp = max(hp - dmg, 0.0);
 }
 
+//////////////////////////////////////////////////////////////////////////////////////
 
 class Player : public Character {
     protected:
@@ -193,16 +194,16 @@ class Enemy : public Character
         int level;
 
     public:
-        Enemy(string name, int floor);
+        Enemy(string name, int layer);
         ~Enemy();
         void printInfo();
 };
 
-Enemy::Enemy(string name, int floor)
+Enemy::Enemy(string name, int layer)
 {
     srand(time(0));
     
-    this->level = floor;
+    this->level = layer;
     this->name = name;
     this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
     this->critDmg = atk * 2;
@@ -241,6 +242,9 @@ int randomInt(int min, int max) {
 
 int main()
 {
+    cout << "! WARNING !\n";
+    cout << "This game is a parody of the manga series Girl's Last Tour.\n";
+    cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
     
     string name;
     cout << "Please name your character: ";
@@ -272,101 +276,118 @@ int main()
     cout << "【按下 Enter 以開始遊戲】" << endl;
     
     cin.get();
-    sleep(300);
 
     // game
-    for (int i = 0; i < FLOOR_CNT; i++)
+    for (int i = 0; i < LAYER_CNT; i++)
     {
         // Generate random number of monsters
-        int enemyQty = randomInt(1, 4);
+        int enemyCnt = randomInt(1, 1);
+        int beatenEnemyCnt = 0;
         
         system("cls");
-        if (player.getHP() <= 0) // Player died
+        
+        // Start fighting
+        for (int j = 0; j < enemyCnt; j++)
         {
-            cout << player.getName() << " sucks. GAME OVER!";
-            break;
-        } else {
-            // Start fighting
-            for (int j = 0; j < enemyQty; j++)
+            // Generate monster
+            Enemy thisEnemy("lckungFake", i + 1);
+            
+            while (thisEnemy.getHP() > 0)  // Player fights
             {
-                // Generate monster
-                Enemy thisEnemy("lckungFake", i + 1);
+                cout << "Current Layer: " << i + 1 << endl << endl;
+                thisEnemy.printInfo();
+                cout << endl;
                 
-                while (thisEnemy.getHP() > 0)  // Player fights
+                // Select tool (or fighting with bare hands)
+                player.printInfo();
+                cout << endl << "Seraching for available items..." << endl;
+                sleep(1500);
+                cout << endl << "Select tool: " << endl;
+                for (int k = 1; k <= player.getItemCnt(); k++){
+                    cout << k <<  ") ";
+                    player.printPossessedItem(k - 1);
+                }
+                cout << player.getItemCnt() + 1 << ") Bare hands" << endl;
+                
+                int selectedIndex = 0;
+                cin >> selectedIndex;
+                // do something to equip item
+                
+                cout << endl;
+                
+                // Player fights enemy
+                int temp = randomInt(1, 100);
+                if (temp <= player.getCritChance() * 100) // critical hit!
                 {
-                    thisEnemy.printInfo();
-                    cout << endl;
-                    
-                    // Select tool (or fighting with bare hands)
-                    player.printInfo();
-                    cout << endl << "Seraching for available items..." << endl;
-                    sleep(1500);
-                    cout << endl << "Select tool: " << endl;
-                    for (int k = 1; k <= player.getItemCnt(); k++){
-                        cout << k <<  ") ";
-                        player.printPossessedItem(k - 1);
-                    }
-                    cout << player.getItemCnt() + 1 << ") Bare hands" << endl;
-                    
-                    int selectedIndex = 0;
-                    cin >> selectedIndex;
-                    // do something to equip item
-                    
-                    cout << endl;
-                    
-                    // Player fights enemy
-                    int temp = randomInt(1, 100);
+                    double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                    thisEnemy.hit(dmg);
+                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                }
+                else // normal hit
+                {
+                    double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                    thisEnemy.hit(dmg);
+                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                }
+                
+                
+                // Enemy fights back if it's alive
+                if (thisEnemy.getHP() > 0)
+                {
                     if (temp <= player.getCritChance() * 100) // critical hit!
                     {
-                        double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                        thisEnemy.hit(dmg);
-                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                        double dmg = player.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
+                        player.hit(dmg);
+                        cout << player.getName() << " loses " << dmg << "HP..." << endl;
                     }
                     else // normal hit
                     {
-                        double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                        thisEnemy.hit(dmg);
-                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                        double dmg = player.getAtk() * max((1 - player.getDefense() / 100), 0.0);
+                        player.hit(dmg);
+                        cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
                     }
                     
-                    
-                    // Enemy fights back if it's alive
-                    if (thisEnemy.getHP() > 0)
+                    if (player.getHP() <= 0) // Player died
                     {
-                        if (temp <= player.getCritChance() * 100) // critical hit!
-                        {
-                            double dmg = player.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
-                            player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl;
-                        }
-                        else // normal hit
-                        {
-                            double dmg = player.getAtk() * max((1 - player.getDefense() / 100), 0.0);
-                            player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
-                        }
-                        
-                        if (player.getHP() <= 0) // Player died
-                        {
-                            cout << player.getName() << " sucks. GAME OVER!";
-                            break;
-                        }
-                        else
-                        {
-                            cout << "[ Press Enter to Continue... ]" << endl;
-                            cin.ignore();
-                            cin.get();
-                            system("cls");
-                        }
+                        cout << player.getName() << " sucks. GAME OVER!";
+                        break;
                     }
                     else
                     {
-                        cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
                         cout << "[ Press Enter to Continue... ]" << endl;
                         cin.ignore();
                         cin.get();
                         system("cls");
                     }
+                }
+                else
+                {
+                    beatenEnemyCnt++;
+                    cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
+                    
+                    if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt)
+                    {
+                        cout << "After a long journey, " << player.getName() << " finally reaches the top layer.\n";
+                        sleep(2500);
+                        cout << "It's a tranquil and peaceful place covered with white snow.\n";
+                        sleep(2500);
+                        cout << "However, there is no food found on the top layer.\n";
+                        sleep(2500);
+                        cout << "With nowhere else to go, " << player.getName() << " decides to enjoy their last days with the remaining food.\n";
+                        sleep(2500);
+                        cout << "Living sure has been great...\n";
+                        sleep(2500);
+                        cout << "I should eat now and then take a nap. After that, maybe think about something...\n";
+                        sleep(2500);
+                    }
+                    else
+                    {
+                        cout << "[ Press Enter to Continue... ]" << endl;
+                        cin.ignore();
+                        cin.get();
+                        system("cls");
+                    }
+                    
                 }
             }
         }
