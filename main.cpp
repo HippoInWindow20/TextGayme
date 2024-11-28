@@ -34,7 +34,7 @@ Item::Item(string name, double atkChange, double critChange, double critChanceCh
 {}
 
 void Item::printInfo(){
-    cout << "PLAYER " << this->name <<endl;
+    cout << "ITEM " << this->name <<endl;
     if (atkChange > 0)
         cout << "   ATK: +" << atkChange << endl;
     if (critChange > 0)
@@ -300,7 +300,7 @@ int main()
                 
                 // Select tool (or fighting with bare hands)
                 player.printInfo();
-                cout << endl << "Seraching for available items..." << endl;
+                cout << endl << "Searching for available items..." << endl;
                 sleep(1500);
                 cout << endl << "Select tool: " << endl;
                 for (int k = 1; k <= player.getItemCnt(); k++){
