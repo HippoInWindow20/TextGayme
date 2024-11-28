@@ -263,7 +263,7 @@ int main()
     sleep(10);
     cout << "模糊卻熟悉的聲音在夢裡迴響著" << endl;
     sleep(10);
-    cout << "那時候的 " << player.getName() << " 大概還不滿十歲" << endl;
+    cout << "那時候的 " << player.getName() << " 大概還不滿十歲" << endl;
     sleep(10);
     cout << "下層的食糧資源已消耗殆盡" << endl;
     sleep(10);
