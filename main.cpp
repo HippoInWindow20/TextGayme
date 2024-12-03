@@ -34,7 +34,7 @@ Item::Item(string name, double atkChange, double critChange, double critChanceCh
 {}
 
 void Item::printInfo(){
-    cout << "ITEM " << this->name <<endl;
+    cout << "ITEM " << this->name << endl;
     if (atkChange > 0)
         cout << "   ATK: +" << atkChange << endl;
     if (critChange > 0)
@@ -267,22 +267,22 @@ int main()
     cout << "\"Go upwards!\"" << endl;
     sleep(10);
     // cout << "¼??½k«o¼ô±xªº??n­µ¦b¹??¸??°j??Tµ??" << endl;
-    cout << "A muffled but familiar sound resonates in your dream." << endl;
+    cout << "An unclear yet familiar voice resonates in " << player.getName() << "'s dream." << endl;
     sleep(10);
     // cout << "¨º®??­??ªº " << player.getName() << " ¤j·§????¤£º¡¤Q·³" << endl;
-    cout << "At this moment " << player.getName() << " is not even ten." << endl;
+    cout << "At that time, " << player.getName() << " was no older than ten." << endl;
     sleep(10);
     // cout << "¤U¼hªº­¹??³¸ê·½¤w®ø¯??¬pº??" << endl;
-    cout << "The bottom has been depleted of food and resources." << endl;
+    cout << "Food and resources are lacking in the lower layers." << endl;
     sleep(10);
     // cout << "¥u¦³©¹¤W¤~¦³¥??¦sªº§??±æ" << endl;
-    cout << "There is only hope of survival by moving upwards." << endl;
+    cout << "The only hope is to move upwards." << endl;
     sleep(10);
     // cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³??³»¼h¬°¥??¼??" << endl;
-    cout << "From then on, the sole goal is to move upwards." << endl;
+    cout << "All " << player.getName() << " can do is to aim for the top layer."<< endl;
     sleep(10);
     // cout << "½??§U " << player.getName() << " ¤@??u¤§¤O§a" << endl << endl;
-    cout << "Please give " << player.getName() << " a helping hand!" << endl;
+    cout << "Please lend " << player.getName() << " a helping hand!" << endl;
     sleep(10);
     // cout << "¡i«ö¤U Enter ¥H¶}©l¹C??¸¡j" << endl;
     cout << "[ Press Enter to start the game ]" << endl;
