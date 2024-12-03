@@ -245,6 +245,7 @@ int randomInt(int min, int max) {
 
 int main()
 {
+    system("cls");
     cout << "! WARNING !\n";
     cout << "This game is a parody of the manga series Girl's Last Tour.\n";
     cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
@@ -266,7 +267,7 @@ int main()
     cout << "\"Go upwards!\"" << endl;
     sleep(10);
     // cout << "¼??½k«o¼ô±xªº??n­µ¦b¹??¸??°j??Tµ??" << endl;
-    cout << "A vague but familiar voice resonates in your dream." << endl;
+    cout << "A muffled but familiar sound resonates in your dream." << endl;
     sleep(10);
     // cout << "¨º®??­??ªº " << player.getName() << " ¤j·§????¤£º¡¤Q·³" << endl;
     cout << "At this moment " << player.getName() << " is not even ten." << endl;
