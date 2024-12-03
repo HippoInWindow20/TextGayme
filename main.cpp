@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-const int LAYER_CNT = 1;
+const int LAYER_CNT = 4;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ void Item::printInfo(){
 
 // Item listing
 Item note7("Note 7", 2, 2, 0.01, 0, 0, 0);
-Item nuclearBomb("Nuclear Bomb", 1, 10, 0, 0, 0, 0);
+Item nuclearBomb("Nuclear Bomb", 10, 100, 100, 0, 0, -5);
 Item knife("Knife", 1, 2, 0, 0, 0, 0);
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -262,21 +262,21 @@ int main()
     system("cls");
     
     // world building
-    cout << "¡u©¹¤W¼h¥h§a¡I¡v" << endl;
+    cout << "Â¡uÂ©Â¹Â¤WÂ¼hÂ¥hÂ§aÂ¡IÂ¡v" << endl;
     sleep(10);
-    cout << "¼Ò½k«o¼ô±xªºÁn­µ¦b¹Ú¸Ì°jÅTµÛ" << endl;
+    cout << "Â¼Ã’Â½kÂ«oÂ¼Ã´Â±xÂªÂºÃnÂ­ÂµÂ¦bÂ¹ÃšÂ¸ÃŒÂ°jÃ…TÂµÃ›" << endl;
     sleep(10);
-    cout << "¨º®É­Ôªº " << player.getName() << " ¤j·§ÁÙ¤£º¡¢Ì·³" << endl;
+    cout << "Â¨ÂºÂ®Ã‰Â­Ã”ÂªÂº " << player.getName() << " Â¤jÂ·Â§ÃÃ™Â¤Â£ÂºÂ¡Â¤QÂ·Â³" << endl;
     sleep(10);
-    cout << "¤U¼hªº­¹Â³¸ê·½¤w®ø¯Ó¬pºÉ" << endl;
+    cout << "Â¤UÂ¼hÂªÂºÂ­Â¹Ã‚Â³Â¸ÃªÂ·Â½Â¤wÂ®Ã¸Â¯Ã“Â¬pÂºÃ‰" << endl;
     sleep(10);
-    cout << "¥u¦³©¹¤W¤~¦³¥Í¦sªº§Æ±æ" << endl;
+    cout << "Â¥uÂ¦Â³Â©Â¹Â¤WÂ¤~Â¦Â³Â¥ÃÂ¦sÂªÂºÂ§Ã†Â±Ã¦" << endl;
     sleep(10);
-    cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³Ì³»¼h¬°¥Ø¼Ð" << endl;
+    cout << "Â±qÂ¦Â¹Â¥HÂ«Ã¡Â¡AÂ«KÂ¥HÂ¨Ã¬Â¹FÂ³ÃŒÂ³Â»Â¼hÂ¬Â°Â¥Ã˜Â¼Ã" << endl;
     sleep(10);
-    cout << "½Ð§U " << player.getName() << " ¤@Áu¤§¤O§a" << endl << endl;
+    cout << "Â½ÃÂ§U " << player.getName() << " Â¤@ÃuÂ¤Â§Â¤OÂ§a" << endl << endl;
     sleep(10);
-    cout << "¡i«ö¤U Enter ¥H¶}©l¹CÀ¸¡j" << endl;
+    cout << "Â¡iÂ«Ã¶Â¤U Enter Â¥HÂ¶}Â©lÂ¹CÃ€Â¸Â¡j" << endl;
     
     cin.get();
 
@@ -303,8 +303,8 @@ int main()
                 
                 // Select tool (or fighting with bare hands)
                 player.printInfo();
-                cout << endl << "Searching for available items..." << endl;
-                sleep(1500);
+                cout << endl << "Choose Your Weapon!" << endl;
+                sleep(500);
                 cout << endl << "Select tool: " << endl;
                 for (int k = 1; k <= player.getItemCnt(); k++){
                     cout << k <<  ") ";
@@ -405,10 +405,25 @@ int main()
                     }
                     else
                     {
-                        cout << "[ Press Enter to Continue... ]" << endl;
-                        cin.ignore();
-                        cin.get();
-                        system("cls");
+                    	if(beatenEnemyCnt < enemyCnt){
+                    		cout << "[ Press Enter to Continue... ]" << endl;
+                        	cin.ignore();
+                        	cin.get();
+                        	system("cls");
+						}
+                        else{
+                        	sleep(2000);
+                        	system("cls");
+                        	cout << "Entering Next Floor.";
+                        	sleep(1000);
+                        	system("cls");
+                        	cout << "Entering Next Floor..";
+                        	sleep(1000);
+                        	system("cls");
+                        	cout << "Entering Next Floor...";
+                        	sleep(1000);
+                        	system("cls");
+						}
                     }
                     
                 }
