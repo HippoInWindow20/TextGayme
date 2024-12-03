@@ -262,21 +262,29 @@ int main()
     system("cls");
     
     // world building
-    cout << "¡u©¹¤W¼h¥h§a¡I¡v" << endl;
+    // cout << "¡u©¹¤W¼h¥h§a¡I¡v" << endl;
+    cout << "\"Go upwards!\"" << endl;
     sleep(10);
-    cout << "¼Ò½k«o¼ô±xªºÁn­µ¦b¹Ú¸Ì°jÅTµÛ" << endl;
+    // cout << "¼??½k«o¼ô±xªº??n­µ¦b¹??¸??°j??Tµ??" << endl;
+    cout << "A vague but familiar voice resonates in your dream." << endl;
     sleep(10);
-    cout << "¨º®É­Ôªº " << player.getName() << " ¤j·§ÁÙ¤£º¡¤Q·³" << endl;
+    // cout << "¨º®??­??ªº " << player.getName() << " ¤j·§????¤£º¡¤Q·³" << endl;
+    cout << "At this moment " << player.getName() << " is not even ten." << endl;
     sleep(10);
-    cout << "¤U¼hªº­¹Â³¸ê·½¤w®ø¯Ó¬pºÉ" << endl;
+    // cout << "¤U¼hªº­¹??³¸ê·½¤w®ø¯??¬pº??" << endl;
+    cout << "The bottom has been depleted of food and resources." << endl;
     sleep(10);
-    cout << "¥u¦³©¹¤W¤~¦³¥Í¦sªº§Æ±æ" << endl;
+    // cout << "¥u¦³©¹¤W¤~¦³¥??¦sªº§??±æ" << endl;
+    cout << "There is only hope of survival by moving upwards." << endl;
     sleep(10);
-    cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³Ì³»¼h¬°¥Ø¼Ð" << endl;
+    // cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³??³»¼h¬°¥??¼??" << endl;
+    cout << "From then on, the sole goal is to move upwards." << endl;
     sleep(10);
-    cout << "½Ð§U " << player.getName() << " ¤@Áu¤§¤O§a" << endl << endl;
+    // cout << "½??§U " << player.getName() << " ¤@??u¤§¤O§a" << endl << endl;
+    cout << "Please give " << player.getName() << " a helping hand!" << endl;
     sleep(10);
-    cout << "¡i«ö¤U Enter ¥H¶}©l¹CÀ¸¡j" << endl;
+    // cout << "¡i«ö¤U Enter ¥H¶}©l¹C??¸¡j" << endl;
+    cout << "[ Press Enter to start the game ]" << endl;
     
     cin.get();
 
