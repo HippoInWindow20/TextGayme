@@ -3,3 +3,4 @@ Skeleton
 Nuko
 Creeper
 Automaton
+Eringi

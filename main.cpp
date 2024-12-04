@@ -8,6 +8,7 @@
 #include <ctime>
 #include <vector>
 #include <fstream>
+#include <cmath>
 using namespace std;
 
 const int LAYER_CNT = 3;
@@ -70,9 +71,18 @@ void Item::printInfo(){
 
 // Item listing
 Item note7("Note 7", 2, 2, 0.01, 0, 0, 0, 1);
-Item nuclearBomb("Nuclear Bomb", 100, 100, 1, 0, 0, -5, 1);
+Item nuclearBomb("Nuclear Bomb", 100, 120, 0.4, 0, 0, -20, 1);
 Item knife("Knife", 1, 2, 0, 0, 0, 0, 2);
 Item freezeDog("Freezed Sausage", 3, 4, 0, 0, 0, 0, 2);
+Item energyDrink("Energy Drink", 0, 0, 0, 0, 0, 50, 3);
+Item hyperEnergyDrink("Hyper Energy Drink", 0, 0, 0, 0, 0, 200, 3);
+Item drone("Drone", 20, 0, 0.1, 0, 0, 0, 1);
+Item map("Map", 0, 0, 0.4, 20, 0, 0, 2);
+Item shield("Shield", 0, 0, 0, 0, 30, 0, 2);
+Item barrier("Barrier", 0, 0, 0, 0, 100, 0, 1);
+Item chocoBar("Chocolate Bar", 2, 0, 0.01, 2, 2, 10, 3);
+Item mysteryFish("Mystery Fish", 10, 0, 0.05, 10, 10, 30, 3);
+Item cppGuideBook("Guide Book for C++ programming Language", 0, 0, 0.1, 10, 30, 20, 3);
 Item godStar("God Star", 1000, 1000, 1000, 1000, 1000, 1000, 2);
 
 vector<Item> itemList;	//a list of all existing items
@@ -106,17 +116,11 @@ class Character
 };
 
 string Character::getName(){return this->name;}
-
 double Character::getAtk(){return this->atk;}
-
 double Character::getCritDmg(){return this->critDmg;}
-
 double Character::getCritChance(){return this->critChance;}
-
 double Character::getAgility(){return this->agility;}
-
 double Character::getDefense(){return this->defense;}
-      
 double Character::getHP(){return hp;}
 
 void Character::hit(double dmg)
@@ -226,10 +230,10 @@ Enemy::Enemy(string name, int layer)
     this->name = name;
     this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
     this->critDmg = atk * 2;
-    this->critChance = 0.1;
-    this->agility = 10;
-    this->defense = 5;
-    this->hp = 15;
+    this->critChance = 0.1 * pow(level, 1.0 / 3);
+    this->agility = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
+    this->defense = 2 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
+    this->hp = 15 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
 }
 
 Enemy::~Enemy()
@@ -270,7 +274,7 @@ int main()
 	
 	
 	fstream mobFile;
-    mobFile.open("names.txt");
+    mobFile.open("mobNames.txt");
     vector<string> mobName;
     string fileInput;
     while(!mobFile.eof()){
@@ -298,28 +302,20 @@ int main()
     system("cls");
     
     // world building
-    // cout << "¡u©¹¤W¼h¥h§a¡I¡v" << endl;
     cout << "\"Go upwards!\"" << endl;
     sleep(10);
-    // cout << "¼??½k«o¼ô±xªº??n­µ¦b¹??¸??°j??Tµ??" << endl;
     cout << "An unclear yet familiar voice resonates in " << player.getName() << "'s dream." << endl;
     sleep(10);
-    // cout << "¨º®??­??ªº " << player.getName() << " ¤j·§????¤£º¡¤Q·³" << endl;
     cout << "At that time, " << player.getName() << " was no older than ten." << endl;
     sleep(10);
-    // cout << "¤U¼hªº­¹??³¸ê·½¤w®ø¯??¬pº??" << endl;
     cout << "Food and resources are lacking in the lower layers." << endl;
     sleep(10);
-    // cout << "¥u¦³©¹¤W¤~¦³¥??¦sªº§??±æ" << endl;
     cout << "The only hope is to move upwards." << endl;
     sleep(10);
-    // cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³??³»¼h¬°¥??¼??" << endl;
     cout << "All " << player.getName() << " can do is to aim for the top layer."<< endl;
     sleep(10);
-    // cout << "½??§U " << player.getName() << " ¤@??u¤§¤O§a" << endl << endl;
     cout << "Please lend " << player.getName() << " a helping hand!" << endl;
     sleep(10);
-    // cout << "¡i«ö¤U Enter ¥H¶}©l¹C??¸¡j" << endl;
     cout << "[ Press Enter to start the game ]" << endl;
     
     cin.get();
@@ -344,22 +340,20 @@ int main()
                 cout << "Current Layer: " << i + 1 << endl << endl;
                 thisEnemy.printInfo();
                 cout << endl;
-                
-                // Select tool (or fighting with bare hands)
                 player.printInfo();
-                cout << "[ Press Enter to Continue... ]" << endl;
+                cout << endl << "[ Press Enter to Continue... ]" << endl;
                 cin.ignore();
                 cin.get();
-                cout << endl << "Choose Your Weapon!" << endl;
-                sleep(500);
-                cout << endl << "Select tool: " << endl;
+                
+                // Select tool (or fight with bare hands)
+                cout << endl << "Select a tool to fight with " << thisEnemy.getName() << ":" << endl;
                 for (int k = 1; k <= player.getItemCnt(); k++){
                     cout << k <<  ") ";
                     player.printPossessedItem(k - 1);
                 }
                 cout << player.getItemCnt() + 1 << ") Bare hands" << endl;
                 
-                // equip item
+                // Equip item
                 int selectedIndex = 0;
                 while (true) {
                     string input;
@@ -411,7 +405,7 @@ int main()
                     
                     if (player.getHP() <= 0) // Player died
                     {
-                        cout << player.getName() << " sucks. GAME OVER!";
+                        cout << player.getName() << " is defeated on layer " << i + 1 << "...";
                         break;
                     }
                     else
@@ -481,13 +475,13 @@ int main()
                         else{
                         	sleep(2000);
                         	system("cls");
-                        	cout << "Entering Next Floor.";
+                        	cout << "Moving to Next Layer.";
                         	sleep(1000);
                         	system("cls");
-                        	cout << "Entering Next Floor..";
+                        	cout << "Moving to Next Layer..";
                         	sleep(1000);
                         	system("cls");
-                        	cout << "Entering Next Floor...";
+                        	cout << "Moving to Next Layer...";
                         	sleep(1000);
                         	system("cls");
 						}
