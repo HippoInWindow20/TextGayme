@@ -7,9 +7,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <fstream>
 using namespace std;
 
-const int LAYER_CNT = 2;
+const int LAYER_CNT = 3;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -23,18 +24,35 @@ class Item
         double agilityChange;
         double defenseChange;
         double hpChange;
+        int type; //1 for throwable, 2 for weapon, 3 for potion
     public:
-        Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange);
+        Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type);
         void printInfo();
+        //getter from chatgpt
+        double getAtkChange() const { return atkChange; }
+    	double getCritChange() const { return critChange; }
+    	double getCritChanceChange() const { return critChanceChange; }
+   		double getAgilityChange() const { return agilityChange; }
+    	double getDefenseChange() const { return defenseChange; }
+    	double getHpChange() const { return hpChange; }
+    	int getType() const { return type; }
 };
 
-Item::Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange) : 
+Item::Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type) : 
     name(name), atkChange(atkChange), critChange(critChange), critChanceChange(critChanceChange), agilityChange(agilityChange), 
-    defenseChange(defenseChange), hpChange(hpChange)
+    defenseChange(defenseChange), hpChange(hpChange), type(type)
 {}
 
 void Item::printInfo(){
-    cout << "ITEM " << this->name << endl;
+	
+	if (this->type == 1)
+        cout << "PROJECTILE ";
+    else if (this->type == 2)
+        cout << "WEAPON ";
+    else if (this->type == 3)
+        cout << "POTION ";
+	
+    cout << this->name << endl;
     if (atkChange > 0)
         cout << "   ATK: +" << atkChange << endl;
     if (critChange > 0)
@@ -51,9 +69,15 @@ void Item::printInfo(){
 }
 
 // Item listing
-Item note7("Note 7", 2, 2, 0.01, 0, 0, 0);
-Item nuclearBomb("Nuclear Bomb", 10, 100, 100, 0, 0, -5);
-Item knife("Knife", 1, 2, 0, 0, 0, 0);
+Item note7("Note 7", 2, 2, 0.01, 0, 0, 0, 1);
+Item nuclearBomb("Nuclear Bomb", 100, 100, 1, 0, 0, -5, 1);
+Item knife("Knife", 1, 2, 0, 0, 0, 0, 2);
+Item freezeDog("Freezed Sausage", 3, 4, 0, 0, 0, 0, 2);
+Item godStar("God Star", 1000, 1000, 1000, 1000, 1000, 1000, 2);
+
+vector<Item> itemList;	//a list of all existing items
+
+int options[3] = {0};
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,35 +105,19 @@ class Character
         void hit(double dmg);
 };
 
-string Character::getName()
-{
-    return this->name;
-}
+string Character::getName(){return this->name;}
 
-double Character::getAtk()
-{
-    return this->atk;
-}
-double Character::getCritDmg()
-{
-    return this->critDmg;
-}
-double Character::getCritChance()
-{
-    return this->critChance;
-}
-double Character::getAgility()
-{
-    return this->agility;
-}
-double Character::getDefense()
-{
-    return this->defense;
-}       
-double Character::getHP()
-{
-    return hp;
-}
+double Character::getAtk(){return this->atk;}
+
+double Character::getCritDmg(){return this->critDmg;}
+
+double Character::getCritChance(){return this->critChance;}
+
+double Character::getAgility(){return this->agility;}
+
+double Character::getDefense(){return this->defense;}
+      
+double Character::getHP(){return hp;}
 
 void Character::hit(double dmg)
 {
@@ -130,11 +138,28 @@ class Player : public Character {
         void levelUp();
         void equipItem(int id);
         void printInfo();
-        int getItemCnt ();
+        int getItemCnt();
         void printPossessedItem(int index);
         void useItem (int index){
-
+			this->atk+= handsOn[index-1].getAtkChange();
+			this->critDmg+= handsOn[index-1].getCritChange();
+			this->critChance+= handsOn[index-1].getCritChanceChange();
+			this->agility+= handsOn[index-1].getAgilityChange();
+			this->defense+= handsOn[index-1].getDefenseChange();
+			this->hp+= handsOn[index-1].getHpChange();
         };
+        void removeItem(int index){
+        	this->atk-= handsOn[index-1].getAtkChange();
+			this->critDmg-= handsOn[index-1].getCritChange();
+			this->critChance-= handsOn[index-1].getCritChanceChange();
+			this->agility-= handsOn[index-1].getAgilityChange();
+			this->defense-= handsOn[index-1].getDefenseChange();
+			this->hp-= handsOn[index-1].getHpChange();
+			if(handsOn[index-1].getType() == 1){
+				handsOn.erase(handsOn.begin() + index - 1);
+			}
+				
+		};
 };
 
 Player::Player(string name)
@@ -156,18 +181,9 @@ Player::~Player()
 
 void Player::equipItem(int id)
 {
-    switch (id){
-        case 0:
-            this->handsOn.push_back(note7);
-            break;
-        case 1:
-            this->handsOn.push_back(nuclearBomb);
-            break;
-        case 2:
-            this->handsOn.push_back(knife);
-        default:
-            ;
-    }
+
+    this->handsOn.push_back(itemList[id]);
+        
 }
 
 void Player::printInfo()
@@ -245,6 +261,24 @@ int randomInt(int min, int max) {
 
 int main()
 {
+	
+	itemList.push_back(note7);
+	itemList.push_back(nuclearBomb);
+	itemList.push_back(knife);
+	itemList.push_back(freezeDog);
+	itemList.push_back(godStar);
+	
+	
+	fstream mobFile;
+    mobFile.open("names.txt");
+    vector<string> mobName;
+    string fileInput;
+    while(!mobFile.eof()){
+    	mobFile >> fileInput;
+    	mobName.push_back(fileInput);
+	}
+	
+	
     system("cls");
     cout << "! WARNING !\n";
     cout << "This game is a parody of the manga series Girls' Last Tour.\n";
@@ -256,35 +290,36 @@ int main()
     Player player(name);
     // Debug
     player.equipItem(0);
-    player.equipItem(0);
     player.equipItem(1);
     player.equipItem(2);
+    player.equipItem(3);
+    player.equipItem(4);
     
     system("cls");
     
     // world building
-    // cout << "Â¡uÂ©Â¹Â¤WÂ¼hÂ¥hÂ§aÂ¡IÂ¡v" << endl;
+    // cout << "¡u©¹¤W¼h¥h§a¡I¡v" << endl;
     cout << "\"Go upwards!\"" << endl;
     sleep(10);
-    // cout << "Â¼??Â½kÂ«oÂ¼Ã´Â±xÂªÂº??nÂ­ÂµÂ¦bÂ¹??Â¸??Â°j??TÂµ??" << endl;
+    // cout << "¼??½k«o¼ô±xªº??n­µ¦b¹??¸??°j??Tµ??" << endl;
     cout << "An unclear yet familiar voice resonates in " << player.getName() << "'s dream." << endl;
     sleep(10);
-    // cout << "Â¨ÂºÂ®??Â­??ÂªÂº " << player.getName() << " Â¤jÂ·Â§????Â¤Â£ÂºÂ¡Â¤QÂ·Â³" << endl;
+    // cout << "¨º®??­??ªº " << player.getName() << " ¤j·§????¤£º¡¤Q·³" << endl;
     cout << "At that time, " << player.getName() << " was no older than ten." << endl;
     sleep(10);
-    // cout << "Â¤UÂ¼hÂªÂºÂ­Â¹??Â³Â¸ÃªÂ·Â½Â¤wÂ®Ã¸Â¯??Â¬pÂº??" << endl;
+    // cout << "¤U¼hªº­¹??³¸ê·½¤w®ø¯??¬pº??" << endl;
     cout << "Food and resources are lacking in the lower layers." << endl;
     sleep(10);
-    // cout << "Â¥uÂ¦Â³Â©Â¹Â¤WÂ¤~Â¦Â³Â¥??Â¦sÂªÂºÂ§??Â±Ã¦" << endl;
+    // cout << "¥u¦³©¹¤W¤~¦³¥??¦sªº§??±æ" << endl;
     cout << "The only hope is to move upwards." << endl;
     sleep(10);
-    // cout << "Â±qÂ¦Â¹Â¥HÂ«Ã¡Â¡AÂ«KÂ¥HÂ¨Ã¬Â¹FÂ³??Â³Â»Â¼hÂ¬Â°Â¥??Â¼??" << endl;
+    // cout << "±q¦¹¥H«á¡A«K¥H¨ì¹F³??³»¼h¬°¥??¼??" << endl;
     cout << "All " << player.getName() << " can do is to aim for the top layer."<< endl;
     sleep(10);
-    // cout << "Â½??Â§U " << player.getName() << " Â¤@??uÂ¤Â§Â¤OÂ§a" << endl << endl;
+    // cout << "½??§U " << player.getName() << " ¤@??u¤§¤O§a" << endl << endl;
     cout << "Please lend " << player.getName() << " a helping hand!" << endl;
     sleep(10);
-    // cout << "Â¡iÂ«Ã¶Â¤U Enter Â¥HÂ¶}Â©lÂ¹C??Â¸Â¡j" << endl;
+    // cout << "¡i«ö¤U Enter ¥H¶}©l¹C??¸¡j" << endl;
     cout << "[ Press Enter to start the game ]" << endl;
     
     cin.get();
@@ -302,7 +337,7 @@ int main()
         for (int j = 0; j < enemyCnt; j++)
         {
             // Generate monster
-            Enemy thisEnemy("lckungFake", i + 1);
+            Enemy thisEnemy(mobName[randomInt(0, mobName.size() - 1)] , i + 1);
             
             while (thisEnemy.getHP() > 0)  // Player fights
             {
@@ -312,6 +347,9 @@ int main()
                 
                 // Select tool (or fighting with bare hands)
                 player.printInfo();
+                cout << "[ Press Enter to Continue... ]" << endl;
+                cin.ignore();
+                cin.get();
                 cout << endl << "Choose Your Weapon!" << endl;
                 sleep(500);
                 cout << endl << "Select tool: " << endl;
@@ -378,6 +416,7 @@ int main()
                     }
                     else
                     {
+                    	player.removeItem(selectedIndex);
                         cout << "[ Press Enter to Continue... ]" << endl;
                         cin.ignore();
                         cin.get();
@@ -386,6 +425,7 @@ int main()
                 }
                 else
                 {
+                	player.removeItem(selectedIndex);
                     beatenEnemyCnt++;
                     cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
                     
@@ -434,7 +474,7 @@ int main()
                     {
                     	if(beatenEnemyCnt < enemyCnt){
                     		cout << "[ Press Enter to Continue... ]" << endl;
-                        	cin.ignore();
+                    		cin.ignore();
                         	cin.get();
                         	system("cls");
 						}
