@@ -1,0 +1,5 @@
+Zombie
+Skeleton
+Nuko
+Creeper
+Automaton
