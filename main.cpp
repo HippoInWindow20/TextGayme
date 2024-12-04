@@ -9,7 +9,7 @@
 #include <vector>
 using namespace std;
 
-const int LAYER_CNT = 4;
+const int LAYER_CNT = 2;
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -247,7 +247,7 @@ int main()
 {
     system("cls");
     cout << "! WARNING !\n";
-    cout << "This game is a parody of the manga series Girl's Last Tour.\n";
+    cout << "This game is a parody of the manga series Girls' Last Tour.\n";
     cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
     
     string name;
@@ -321,13 +321,20 @@ int main()
                 }
                 cout << player.getItemCnt() + 1 << ") Bare hands" << endl;
                 
+                // equip item
                 int selectedIndex = 0;
-                cin >> selectedIndex;
-                // do something to equip item
-                while ((selectedIndex < 1 || selectedIndex > player.getItemCnt() + 1) || cin.fail()){
-                    cout << "Invalid Number! Try again: ";
-                    cin >> selectedIndex;
-                    cout << endl;
+                while (true) {
+                    string input;
+                    cin >> input;
+                    try {
+                        selectedIndex = stoi(input);
+                        if (selectedIndex < 1 || selectedIndex > player.getItemCnt() + 1 || input.length() != to_string(selectedIndex).length()) {
+                            throw invalid_argument("Invalid range");
+                        }
+                        break;
+                    } catch (invalid_argument&) {
+                        cout << "Invalid input! Please try again: ";
+                    }
                 }
                 player.useItem(selectedIndex);
                 cout << endl;
@@ -384,6 +391,8 @@ int main()
                     
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt)
                     {
+                        sleep(2000);
+                        system("cls");
                         cout << "After a long journey, " << player.getName() << " finally reaches the top layer.\n";
                         sleep(2500);
                         cout << "It's a tranquil and peaceful place covered with white snow.\n";
@@ -392,25 +401,34 @@ int main()
                         sleep(2500);
                         cout << "With nowhere else to go, " << player.getName() << " decides to enjoy their last days with the remaining food.\n";
                         sleep(2500);
-                        cout << "Living sure has been great...\n";
+                        cout << "\"Living sure has been great...\"\n";
                         sleep(2500);
-                        cout << "I should eat now and then take a nap. After that, maybe think about something...\n";
+                        cout << "\"I should eat now and then take a nap. After that, maybe think about something...\"\n";
                         sleep(2500);
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
-                        cout << "??????????????????????????????" << endl;
+                        cout << endl;
+                        cout << ".###%%%*@@#%%%@@@@@               @@@@@@@=-@@@@@@ " << endl;
+                        cout << " #%%%%%*@@#%@@@@   .=+++++++++++=.  .@@@@@@@@@@@@ " << endl;
+                        cout << " %%%%%%#@@#@@@  .=+=--==++++++++===-  #@@%%%+-@@@ " << endl;
+                        cout << " %%%%%%#@@@@+ .=+==@@@@--+++++++==@@@+  @@@%-%%** " << endl;
+                        cout << " %%%%%%#@@@  -+++=@    @-+++++++=@   @+ =@@=%@%%% " << endl;
+                        cout << " %%%%%%%@@ .=++++=@   @--+++++++==@@@=-- @+@@%%%% " << endl;
+                        cout << " %%%%%%@@: =+++++==@@@==+++++++++++=--++..@@%%%%% " << endl;
+                        cout << " #%%%%@@# =+++++++++++++++++++++++++++++= @@%%%%% " << endl;
+                        cout << " #%%%%@@ -++++++++++++++++++=+++++++++++- @@%%%%% " << endl;
+                        cout << " %#%%@@- ++++++++++++++++++( )+++++++++= -@@%%%%% " << endl;
+                        cout << " @#*%@@ -+++++++++++++++++++++++++++++=. @@%%%%%% " << endl;
+                        cout << " @@@*@@ ++++++++++++++++++++++++++++++. @@@%%%%%% " << endl;
+                        cout << " @@@@@: +++++++++++++++++++++++++++++. @@@%%%%%%% " << endl;
+                        cout << " %@@@@ :++++++++++++++++++++++++++++- @%@%%%%%%%% " << endl;
+                        cout << " %##@@ -+++++++++++++++++++++++++++= @@-@%%%%%%%% " << endl;
+                        cout << " %%%@@ -+++++++++++++++++++++++++++=.@@#@%%%%%%%% " << endl;
+                        cout << " %%%@@.-++++++++++++++++++++++++++++- -@@@%%%%%%% " << endl;
+                        cout << " %%%@@.=+@@=++++++++++*****+*+**+++++=  @@@%%%%%% " << endl;
+                        cout << " %%@@@ +=-@==++++*++**+++++++++=:=:.-++: @@%%%%%= " << endl;
+                        cout << " %@@@ -*+=-@=+**+@*++++*+++++=:.=@@@  -+. @@@:@@- " << endl;
+                        cout << " %@@@ +***=+#++*+:@     .... :=#+:.-@+ .: *@@@@@- " << endl;
+                        cout << " %@@::+****+#+--: @@@@%::-==+=-#@@@@@@@  =@@@@@:+ " << endl;
+                        cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl;
                     }
                     else
                     {
