@@ -13,6 +13,12 @@ using namespace std;
 
 const int LAYER_CNT = 3;
 
+int randomInt(int min, int max)
+{
+    srand(time(0));
+    return min + rand() % (max + 1 - min);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Item
@@ -74,7 +80,7 @@ void Item::printInfo()
 Item note7("Note 7", 2, 2, 0.01, 0, 0, 0, 1);
 Item nuclearBomb("Nuclear Bomb", 100, 120, 0.4, 0, 0, -20, 1);
 Item knife("Knife", 1, 2, 0, 0, 0, 0, 2);
-Item freezeDog("Freezed Sausage", 3, 4, 0, 0, 0, 0, 2);
+Item freezeDog("Frozen Sausage", 3, 4, 0, 0, 0, 0, 2);
 Item energyDrink("Energy Drink", 0, 0, 0, 0, 0, 50, 3);
 Item hyperEnergyDrink("Hyper Energy Drink", 0, 0, 0, 0, 0, 200, 3);
 Item drone("Drone", 20, 0, 0.1, 0, 0, 0, 1);
@@ -142,7 +148,6 @@ protected:
 public:
     Player(string name);
     ~Player();
-    void levelUp();
     void equipItem(int id);
     void printInfo();
     int getItemCnt();
@@ -156,7 +161,7 @@ public:
         this->defense += handsOn[index - 1].getDefenseChange();
         this->hp += handsOn[index - 1].getHpChange();
     };
-    void removeItem(int index)
+    void nullifyItem(int index)
     {
         this->atk -= handsOn[index - 1].getAtkChange();
         this->critDmg -= handsOn[index - 1].getCritChange();
@@ -169,15 +174,39 @@ public:
             handsOn.erase(handsOn.begin() + index - 1);
         }
     };
-    void addValues(int value)
+    void levelUp()
     {
-        this->atk *= value;
-        this->critDmg *= value;
-        this->critChance *= value;
-        this->agility *= value;
-        this->defense *= value;
-        this->hp *= value;
+        cout << "Level up!" << endl;
+        cout << "Attack: " << this->atk << " -> ";
+        this->atk *= 1.3;
+        cout << this->atk << endl;
+        cout << "Crit Damage: " << this->critDmg << " -> ";
+        this->critDmg = atk * 2;
+        cout << this->critDmg << endl;
+        cout << "Crit Chance: " << this->critChance * 100 << "% -> ";
+        this->critChance += 0.01;
+        cout << this->critChance * 100 << "%" << endl;
+        cout << "Agility: " << this->agility << " -> ";
+        this->agility += 0.015;
+        cout << this->agility << endl;
+        cout << "Defense: " << this->defense << " -> ";
+        this->defense *= 1.1;
+        cout << this->defense << endl;
+        cout << "HP: " << this->hp << " -> ";
+        this->hp += randomInt(10, 60);
+        cout << this->hp << endl;
+        cout << "Level: " << this->level << " -> ";
         this->level += 1;
+        cout << this->level << endl;
+    };
+    void addValues (double atk, double critDmg, double critChance, double agility, double defense, double hp)
+    {
+        this->atk += atk;
+        this->critDmg += critDmg;
+        this->critChance += critChance;
+        this->agility += agility;
+        this->defense += defense;
+        this->hp += hp;
     };
 };
 
@@ -187,7 +216,7 @@ Player::Player(string name)
     this->atk = 10;
     this->critDmg = atk * 2;
     this->critChance = 0.1;
-    this->agility = 20;
+    this->agility = 0.1;
     this->defense = 10;
     this->hp = 99;
     this->level = 1;
@@ -200,8 +229,10 @@ Player::~Player()
 
 void Player::equipItem(int id)
 {
-
-    this->handsOn.push_back(itemList[id]);
+    if (itemList[id].getType() != 3)
+        this->handsOn.push_back(itemList[id]);
+    else
+        this->addValues(itemList[id].getAtkChange(), itemList[id].getCritChange(), itemList[id].getCritChanceChange(), itemList[id].getAgilityChange(), itemList[id].getDefenseChange(), itemList[id].getHpChange());
 }
 
 void Player::printInfo()
@@ -274,11 +305,7 @@ void sleep(int ms)
     this_thread::sleep_for(chrono::milliseconds(ms));
 }
 
-int randomInt(int min, int max)
-{
-    srand(time(0));
-    return min + rand() % (max + 1 - min);
-}
+
 
 int main()
 {
@@ -398,18 +425,18 @@ int main()
                 // Player fights enemy
                 int temp = randomInt(1, 100);
                 
-                    if (temp <= player.getCritChance() * 100) // critical hit!
-                    {
-                        double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                        thisEnemy.hit(dmg);
-                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
-                    }
-                    else // normal hit
-                    {
-                        double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                        thisEnemy.hit(dmg);
-                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
-                    }
+                if (temp <= player.getCritChance() * 100) // critical hit!
+                {
+                    double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                    thisEnemy.hit(dmg);
+                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                }
+                else // normal hit
+                {
+                    double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                    thisEnemy.hit(dmg);
+                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                }
 
                 // Enemy fights back if it's alive
                 if (thisEnemy.getHP() > 0)
@@ -431,12 +458,11 @@ int main()
                     if (player.getHP() <= 0) // Player died
                     {
                         cout << player.getName() << " is defeated on layer " << i + 1 << "...";
-                        player.addValues(1.2);
                         break;
                     }
                     else
                     {
-                        player.removeItem(selectedIndex);
+                        player.nullifyItem(selectedIndex);
                         cout << "[ Press Enter to Continue... ]" << endl;
                         cin.ignore();
                         cin.get();
@@ -445,7 +471,7 @@ int main()
                 }
                 else
                 {
-                    player.removeItem(selectedIndex);
+                    player.nullifyItem(selectedIndex);
                     beatenEnemyCnt++;
                     cout << thisEnemy.getName() << " is beaten!!!" << endl
                          << endl;
@@ -461,17 +487,30 @@ int main()
                         cout << k + 1 << ") ";
                         itemList[options[k]].printInfo();
                     }
-                    int choice = -1;
-                    cin >> choice;
-                    while (choice < 1 || choice > 3)
+                    int choice = 0;
+                    while (true)
                     {
-                        cout << "Invalid choice! Please try again: ";
-                        cin >> choice;
+                        string choice_input;
+                        cin >> choice_input;
+                        try
+                        {
+                            choice = stoi(choice_input);
+                            if (choice < 1 || choice > 3 || choice_input.length() != to_string(selectedIndex).length())
+                            {
+                                throw invalid_argument("Invalid range");
+                            }
+                            break;
+                        }
+                        catch (invalid_argument &)
+                        {
+                            cout << "Invalid input! Please try again: ";
+                        }
                     }
                     player.equipItem(options[choice - 1]);
                     cout << "Congrats! You have obtained:" << endl;
                     itemList[options[choice - 1]].printInfo();
-
+                    cout << endl;
+                    player.levelUp();
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt)
                     {
                         sleep(2000);
