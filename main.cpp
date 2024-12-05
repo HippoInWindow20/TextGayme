@@ -82,7 +82,7 @@ Item shield("Shield", 0, 0, 0, 0, 30, 0, 2);
 Item barrier("Barrier", 0, 0, 0, 0, 100, 0, 1);
 Item chocoBar("Chocolate Bar", 2, 0, 0.01, 2, 2, 10, 3);
 Item mysteryFish("Mystery Fish", 10, 0, 0.05, 10, 10, 30, 3);
-Item cppGuideBook("Guide Book for C++ programming Language", 0, 0, 0.1, 10, 30, 20, 3);
+Item cppGuideBook("Guide Book for C++ Programming Language", 0, 0, 0.1, 10, 30, 20, 3);
 Item godStar("God Star", 1000, 1000, 1000, 1000, 1000, 1000, 2);
 
 vector<Item> itemList;	//a list of all existing items
