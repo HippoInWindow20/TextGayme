@@ -164,6 +164,16 @@ class Player : public Character {
 			}
 				
 		};
+        void addValues (int value){
+        	this->atk*= value; 
+            this->critDmg*= value;
+            this->critChance*= value;
+            this->agility*= value;
+            this->defense*= value;
+            this->hp*= value;
+            this->level += 1;
+        };
+            
 };
 
 Player::Player(string name)
@@ -343,7 +353,6 @@ int main()
                 player.printInfo();
                 cout << endl << "[ Press Enter to Continue... ]" << endl;
                 cin.ignore();
-                cin.get();
                 
                 // Select tool (or fight with bare hands)
                 cout << endl << "Select a tool to fight with " << thisEnemy.getName() << ":" << endl;
@@ -406,6 +415,7 @@ int main()
                     if (player.getHP() <= 0) // Player died
                     {
                         cout << player.getName() << " is defeated on layer " << i + 1 << "...";
+                        player.addValues(1.2);
                         break;
                     }
                     else
@@ -422,7 +432,28 @@ int main()
                 	player.removeItem(selectedIndex);
                     beatenEnemyCnt++;
                     cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
-                    
+                    sleep(3000);
+                    system("cls");
+                    //Choose Item
+                    cout << "Choose an item to take with you: " << endl;
+                    //Pick random three numbers not exceeding total item count
+                    for (int k = 0; k < 3; k++){
+                        options[k] = randomInt(0, itemList.size() - 1);
+                        sleep(30);
+                        cout << k + 1 << ") ";
+                        itemList[options[k]].printInfo();
+                    }                    
+                    int choice = -1;
+                    cin >> choice;
+                    while (choice < 1 || choice > 3){
+                        cout << "Invalid choice! Please try again: ";
+                        cin >> choice;
+                    }
+                    player.equipItem(options[choice - 1]);
+                    cout << "Congrats! You have obtained:" << endl;
+                    itemList[options[choice - 1]].printInfo();
+
+
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt)
                     {
                         sleep(2000);
