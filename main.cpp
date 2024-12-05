@@ -15,7 +15,6 @@ const int LAYER_CNT = 3;
 
 int randomInt(int min, int max)
 {
-    srand(time(0));
     return min + rand() % (max + 1 - min);
 }
 
@@ -31,7 +30,7 @@ protected:
     double agilityChange;
     double defenseChange;
     double hpChange;
-    int type; // 1 for throwable, 2 for weapon, 3 for potion
+    int type; // 1 for projectile, 2 for weapon, 3 for potion
 public:
     Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type);
     void printInfo();
@@ -271,16 +270,14 @@ public:
 
 Enemy::Enemy(string name, int layer)
 {
-    srand(time(0));
-
     this->level = layer;
     this->name = name;
-    this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
+    this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4);
     this->critDmg = atk * 2;
-    this->critChance = 0.1 * pow(level, 1.0 / 3);
-    this->agility = 0.08 * pow(level, 1.0 / 3);
-    this->defense = 2 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
-    this->hp = 15 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
+    this->critChance = 0.1 * pow(level, 2.0 / 5);
+    this->agility = 0.08 * pow(level, 2.0 / 5);
+    this->defense = 2 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3);
+    this->hp = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4);
 }
 
 Enemy::~Enemy()
@@ -305,16 +302,23 @@ void sleep(int ms)
     this_thread::sleep_for(chrono::milliseconds(ms));
 }
 
-
-
 int main()
 {
-
+    srand(time(0));
     itemList.push_back(note7);
     itemList.push_back(nuclearBomb);
     itemList.push_back(knife);
     itemList.push_back(freezeDog);
     itemList.push_back(godStar);
+    itemList.push_back(energyDrink);
+    itemList.push_back(hyperEnergyDrink);
+    itemList.push_back(drone);
+    itemList.push_back(map);
+    itemList.push_back(shield);
+    itemList.push_back(barrier);
+    itemList.push_back(chocoBar);
+    itemList.push_back(mysteryFish);
+    itemList.push_back(cppGuideBook);
 
     fstream mobFile;
     mobFile.open("mobNames.txt");
@@ -335,12 +339,6 @@ int main()
     cout << "Please name your character: ";
     getline(cin, name);
     Player player(name);
-    // Debug
-    player.equipItem(0);
-    player.equipItem(1);
-    player.equipItem(2);
-    player.equipItem(3);
-    player.equipItem(4);
 
     system("cls");
 
@@ -375,7 +373,7 @@ int main()
         // Start fighting
         for (int j = 0; j < enemyCnt; j++)
         {
-            // Generate monster
+            // Generate enemy
             Enemy thisEnemy(mobName[randomInt(0, mobName.size() - 1)], i + 1);
 
             while (thisEnemy.getHP() > 0) // Player fights
@@ -419,99 +417,125 @@ int main()
                         cout << "Invalid input! Please try again: ";
                     }
                 }
-                player.useItem(selectedIndex);
+                if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
+                    player.useItem(selectedIndex);
                 cout << endl;
 
                 // Player fights enemy
-                int temp = randomInt(1, 100);
+                int randAgilityEnemy = randomInt(1, 100);
+                if (randAgilityEnemy < thisEnemy.getAgility() * 100) // safe
+                {
+                    cout << player.getName() << " deals no damage in the attack..." << endl;
+                }
+                else // hit
+                {
+                    int randHitPlayer = randomInt(1, 100);
+                    if (randHitPlayer <= player.getCritChance() * 100) // critical hit!
+                    {
+                        double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                        thisEnemy.hit(dmg);
+                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                    }
+                    else // normal hit
+                    {
+                        double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                        thisEnemy.hit(dmg);
+                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                    }
+                }
                 
-                if (temp <= player.getCritChance() * 100) // critical hit!
-                {
-                    double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                    thisEnemy.hit(dmg);
-                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
-                }
-                else // normal hit
-                {
-                    double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
-                    thisEnemy.hit(dmg);
-                    cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
-                }
 
                 // Enemy fights back if it's alive
                 if (thisEnemy.getHP() > 0)
                 {
-                    if (temp <= player.getCritChance() * 100) // critical hit!
+                    int randAgilityPlayer = randomInt(1, 100);
+                    if (randAgilityPlayer < player.getAgility() * 100) // safe
                     {
-                        double dmg = player.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
-                        player.hit(dmg);
-                        cout << player.getName() << " loses " << dmg << "HP..." << endl;
+                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl;
                     }
-                    else // normal hit
+                    else // hit
                     {
-                        double dmg = player.getAtk() * max((1 - player.getDefense() / 100), 0.0);
-                        player.hit(dmg);
-                        cout << player.getName() << " loses " << dmg << "HP..." << endl
-                             << endl;
-                    }
-
-                    if (player.getHP() <= 0) // Player died
-                    {
-                        cout << player.getName() << " is defeated on layer " << i + 1 << "...";
-                        break;
-                    }
-                    else
-                    {
-                        player.nullifyItem(selectedIndex);
-                        cout << "[ Press Enter to Continue... ]" << endl;
-                        cin.ignore();
-                        cin.get();
-                        system("cls");
+                        int randHitEnemy = randomInt(1, 100);
+                        if (randHitEnemy <= thisEnemy.getCritChance() * 100) // critical hit!
+                        {
+                            double dmg = player.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
+                            player.hit(dmg);
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl;
+                        }
+                        else // normal hit
+                        {
+                            double dmg = player.getAtk() * max((1 - player.getDefense() / 100), 0.0);
+                            player.hit(dmg);
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl
+                                 << endl;
+                        }
+    
+                        if (player.getHP() <= 0) // Player died
+                        {
+                            cout << player.getName() << " is defeated on layer " << i + 1 << "...";
+                            break;
+                        }
+                        else
+                        {
+                            if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
+                                player.nullifyItem(selectedIndex);
+                            cout << "[ Press Enter to Continue... ]" << endl;
+                            cin.ignore();
+                            cin.get();
+                            system("cls");
+                        }
                     }
                 }
-                else
+                
+                else // Enemy is beaten
                 {
-                    player.nullifyItem(selectedIndex);
+                    if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
+                        player.nullifyItem(selectedIndex);
                     beatenEnemyCnt++;
                     cout << thisEnemy.getName() << " is beaten!!!" << endl
                          << endl;
                     sleep(3000);
                     system("cls");
-                    // Choose Item
-                    cout << "Choose an item to take with you: " << endl;
-                    // Pick random three numbers not exceeding total item count
-                    for (int k = 0; k < 3; k++)
+                    
+                    // Choose item as reward before entering next layer
+                    if (i + 1 != LAYER_CNT)
                     {
-                        options[k] = randomInt(0, itemList.size() - 1);
-                        sleep(500);
-                        cout << k + 1 << ") ";
-                        itemList[options[k]].printInfo();
-                    }
-                    int choice = 0;
-                    while (true)
-                    {
-                        string choice_input;
-                        cin >> choice_input;
-                        try
+                        cout << "Choose an item to take with you: " << endl;
+                        // Pick random three numbers not exceeding total item count
+                        for (int k = 0; k < 3; k++)
                         {
-                            choice = stoi(choice_input);
-                            if (choice < 1 || choice > 3 || choice_input.length() != to_string(selectedIndex).length())
+                            options[k] = randomInt(0, itemList.size() - 1);
+                            sleep(500);
+                            cout << k + 1 << ") ";
+                            itemList[options[k]].printInfo();
+                        }
+                        int choice = 0;
+                        while (true)
+                        {
+                            string choice_input;
+                            cin >> choice_input;
+                            try
                             {
-                                throw invalid_argument("Invalid range");
+                                choice = stoi(choice_input);
+                                if (choice < 1 || choice > 3 || choice_input.length() != to_string(selectedIndex).length())
+                                {
+                                    throw invalid_argument("Invalid range");
+                                }
+                                break;
                             }
-                            break;
+                            catch (invalid_argument &)
+                            {
+                                cout << "Invalid input! Please try again: ";
+                            }
                         }
-                        catch (invalid_argument &)
-                        {
-                            cout << "Invalid input! Please try again: ";
-                        }
+                        player.equipItem(options[choice - 1]);
+                        cout << "Congrats! You have obtained:" << endl;
+                        itemList[options[choice - 1]].printInfo();
+                        cout << endl;
+                        player.levelUp();
                     }
-                    player.equipItem(options[choice - 1]);
-                    cout << "Congrats! You have obtained:" << endl;
-                    itemList[options[choice - 1]].printInfo();
-                    cout << endl;
-                    player.levelUp();
-                    if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt)
+                    
+                    if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt) // Game completion
                     {
                         sleep(2000);
                         system("cls");
@@ -563,7 +587,7 @@ int main()
                         }
                         else
                         {
-                            sleep(2000);
+                            sleep(5000);
                             system("cls");
                             cout << "Moving to Next Layer.";
                             sleep(1000);
