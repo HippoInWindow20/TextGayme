@@ -11,7 +11,7 @@
 #include <cmath>
 using namespace std;
 
-const int LAYER_CNT = 3;
+const int LAYER_CNT = 20;
 
 int randomInt(int min, int max)
 {
@@ -76,20 +76,21 @@ void Item::printInfo()
 }
 
 // Item listing
-Item note7("Note 7", 2, 2, 0.01, 0, 0, 0, 1);
+Item note7("Note 7", 5, 10, 0.01, 0, 0, 0, 1);
 Item nuclearBomb("Nuclear Bomb", 100, 120, 0.4, 0, 0, -20, 1);
 Item knife("Knife", 1, 2, 0, 0, 0, 0, 2);
 Item freezeDog("Frozen Sausage", 3, 4, 0, 0, 0, 0, 2);
 Item energyDrink("Energy Drink", 0, 0, 0, 0, 0, 50, 3);
 Item hyperEnergyDrink("Hyper Energy Drink", 0, 0, 0, 0, 0, 200, 3);
 Item drone("Drone", 20, 0, 0.1, 0, 0, 0, 1);
-Item map("Map", 0, 0, 0.4, 20, 0, 0, 2);
-Item shield("Shield", 0, 0, 0, 0, 30, 0, 2);
+Item map("Map", 0, 0, 0.2, 30, 0, 0, 2);
+Item shield("Shield", 0, 0, 0, 0, 30, 0, 1);
 Item barrier("Barrier", 0, 0, 0, 0, 100, 0, 1);
 Item chocoBar("Chocolate Bar", 2, 0, 0.01, 2, 2, 10, 3);
-Item mysteryFish("Mystery Fish", 10, 0, 0.05, 10, 10, 30, 3);
-Item cppGuideBook("Guide Book for C++ Programming Language", 0, 0, 0.1, 10, 30, 20, 3);
-Item godStar("God Star", 1000, 1000, 1000, 1000, 1000, 1000, 2);
+Item mysteryFish("Mystery Fish", 10, 0, 0.05, 2, 10, 30, 3);
+Item cppGuideBook("Guide Book for C++ Programming Language", 0, 0, 0.1, 5, 30, 20, 3);
+Item gambleToken("Gamble Token", 0, 9999, -0.08, 0, 0, 0, 1);
+Item godStar("God Star", 1000, 1000, 1, 100, 1000, 1000, 2);
 
 vector<Item> itemList; // a list of all existing items
 
@@ -177,7 +178,7 @@ public:
     {
         cout << "Level up!" << endl;
         cout << "Attack: " << this->atk << " -> ";
-        this->atk *= 1.3;
+        this->atk *= 1.2;
         cout << this->atk << endl;
         cout << "Crit Damage: " << this->critDmg << " -> ";
         this->critDmg = atk * 2;
@@ -186,13 +187,13 @@ public:
         this->critChance += 0.01;
         cout << this->critChance * 100 << "%" << endl;
         cout << "Agility: " << this->agility << " -> ";
-        this->agility += 0.015;
+        this->agility += 1.5;
         cout << this->agility << endl;
         cout << "Defense: " << this->defense << " -> ";
-        this->defense *= 1.1;
+        this->defense *= 1.15;
         cout << this->defense << endl;
         cout << "HP: " << this->hp << " -> ";
-        this->hp += randomInt(10, 60);
+        this->hp += randomInt(10, 50);
         cout << this->hp << endl;
         cout << "Level: " << this->level << " -> ";
         this->level += 1;
@@ -215,7 +216,7 @@ Player::Player(string name)
     this->atk = 10;
     this->critDmg = atk * 2;
     this->critChance = 0.1;
-    this->agility = 0.1;
+    this->agility = 10;
     this->defense = 10;
     this->hp = 99;
     this->level = 1;
@@ -275,9 +276,9 @@ Enemy::Enemy(string name, int layer)
     this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4);
     this->critDmg = atk * 2;
     this->critChance = 0.1 * pow(level, 2.0 / 5);
-    this->agility = 0.08 * pow(level, 2.0 / 5);
-    this->defense = 2 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3);
-    this->hp = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4);
+    this->agility = 8 * pow(level, 2.0 / 5);
+    this->defense = 3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3);
+    this->hp = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
 }
 
 Enemy::~Enemy()
@@ -319,6 +320,7 @@ int main()
     itemList.push_back(chocoBar);
     itemList.push_back(mysteryFish);
     itemList.push_back(cppGuideBook);
+    itemList.push_back(gambleToken);
 
     fstream mobFile;
     mobFile.open("mobNames.txt");
@@ -423,7 +425,7 @@ int main()
 
                 // Player fights enemy
                 int randAgilityEnemy = randomInt(1, 100);
-                if (randAgilityEnemy < thisEnemy.getAgility() * 100) // safe
+                if (randAgilityEnemy < thisEnemy.getAgility()) // safe
                 {
                     cout << player.getName() << " deals no damage in the attack..." << endl;
                 }
@@ -449,41 +451,40 @@ int main()
                 if (thisEnemy.getHP() > 0)
                 {
                     int randAgilityPlayer = randomInt(1, 100);
-                    if (randAgilityPlayer < player.getAgility() * 100) // safe
+                    if (randAgilityPlayer < player.getAgility()) // safe
                     {
-                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl;
+                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl << endl;
                     }
                     else // hit
                     {
                         int randHitEnemy = randomInt(1, 100);
                         if (randHitEnemy <= thisEnemy.getCritChance() * 100) // critical hit!
                         {
-                            double dmg = player.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
+                            double dmg = thisEnemy.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
                             player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl;
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
                         }
                         else // normal hit
                         {
-                            double dmg = player.getAtk() * max((1 - player.getDefense() / 100), 0.0);
+                            double dmg = thisEnemy.getAtk() * max((1 - player.getDefense() / 100), 0.0);
                             player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl
-                                 << endl;
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
                         }
-    
-                        if (player.getHP() <= 0) // Player died
-                        {
-                            cout << player.getName() << " is defeated on layer " << i + 1 << "...";
-                            break;
-                        }
-                        else
-                        {
-                            if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
-                                player.nullifyItem(selectedIndex);
-                            cout << "[ Press Enter to Continue... ]" << endl;
-                            cin.ignore();
-                            cin.get();
-                            system("cls");
-                        }
+                    }
+                    
+                    if (player.getHP() <= 0) // Player died
+                    {
+                        cout << player.getName() << " is defeated on layer " << i + 1 << "...";
+                        break;
+                    }
+                    else
+                    {
+                        if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
+                            player.nullifyItem(selectedIndex);
+                        cout << "[ Press Enter to Continue... ]" << endl;
+                        cin.ignore();
+                        cin.get();
+                        system("cls");
                     }
                 }
                 
@@ -602,7 +603,11 @@ int main()
                     }
                 }
             }
+            if (player.getHP() <= 0)
+                break;
         }
+        if (player.getHP() <= 0)
+            break;
     }
 
     return 0;
