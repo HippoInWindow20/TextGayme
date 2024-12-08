@@ -33,11 +33,13 @@ string removeUnderscore(string str)
     return str;
 }
 
-string colorStart(int num) {
+string colorStart(int num)
+{
     return "\x1B[" + to_string(num) + "m";
 }
 
-string reverseColorStart(int num) {
+string reverseColorStart(int num)
+{
     return "\033[" + to_string(num) + "m";
 }
 
@@ -217,7 +219,7 @@ public:
         this->hp += randomInt(10, 50);
         cout << this->hp << endl;
     };
-    void addValues (double atk, double critDmg, double critChance, double agility, double defense, double hp)
+    void addValues(double atk, double critDmg, double critChance, double agility, double defense, double hp)
     {
         this->atk += atk;
         this->critDmg += critDmg;
@@ -283,6 +285,7 @@ protected:
 
 public:
     Enemy(string name, int layer);
+    Enemy(string name, double atk, double critDmg, double critChance, double agility, double defense, double hp);
     ~Enemy();
     void printInfo();
 };
@@ -297,6 +300,17 @@ Enemy::Enemy(string name, int layer)
     this->agility = roundToOneDec(8 * pow(level, 2.0 / 5));
     this->defense = roundToOneDec(3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
     this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
+}
+// Enemy constructor with custom values
+Enemy::Enemy(string name, double atk, double critDmg, double critChance, double agility, double defense, double hp)
+{
+    this->name = name;
+    this->atk = atk;
+    this->critDmg = critDmg;
+    this->critChance = critChance;
+    this->agility = agility;
+    this->defense = defense;
+    this->hp = hp;
 }
 
 Enemy::~Enemy()
@@ -314,7 +328,6 @@ void Enemy::printInfo()
     cout << "  HP: " << this->hp << endl;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////
 
 void sleep(int ms)
@@ -331,19 +344,20 @@ void printCharByChar(string text)
     }
 }
 
-string twoDigitsOrElse (string num){
+string twoDigitsOrElse(string num)
+{
     if (num.length() == 1)
         return "0" + num;
     return num;
 }
 
-string formatSeconds(int sec) {
+string formatSeconds(int sec)
+{
     int hours = sec / 3600;
     int minutes = (sec % 3600) / 60;
     int seconds = sec % 60;
     return twoDigitsOrElse(to_string(hours)) + ":" + twoDigitsOrElse(to_string(minutes)) + ":" + twoDigitsOrElse(to_string(seconds));
 }
-
 
 int main()
 {
@@ -379,10 +393,11 @@ int main()
         mobFile >> fileInput;
         mobName.push_back(fileInput);
     }
-    
+
     // Starting menu
     system("cls");
-    cout << colorStart(31) << "! WARNING !\n" << colorEnd;
+    cout << colorStart(31) << "! WARNING !\n"
+         << colorEnd;
     cout << "This game is a parody of the manga series Girls' Last Tour.\n";
     cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
 
@@ -410,9 +425,11 @@ int main()
     sleep(50);
     printCharByChar("Please lend " + player.getName() + " a helping hand!\n\n");
     sleep(500);
-    
-    cout << colorStart(93) << "Enter 1 to directly start the game.\n" << colorEnd;
-    cout << colorStart(93) << "Enter 2 to read instructions before starting the game.\n\n" << colorEnd;
+
+    cout << colorStart(93) << "Enter 1 to directly start the game.\n"
+         << colorEnd;
+    cout << colorStart(93) << "Enter 2 to read instructions before starting the game.\n\n"
+         << colorEnd;
     int ans = 0;
     while (true)
     {
@@ -444,13 +461,13 @@ int main()
         printCharByChar("Potion is single-use item, values will add to your attributes once obtained.\n");
         printCharByChar("Enemies will become stronger as you reach higher layer.\n");
         printCharByChar("Good luck and have fun!\n\n");
-        
+
         sleep(500);
         cout << colorStart(93) << "[ Press Enter to start the game ]" << colorEnd << endl;
         cin.ignore();
         cin.get();
     }
-    
+
     time_t startTime = time(0);
     // Game
     for (int i = 0; i < LAYER_CNT; i++)
@@ -460,7 +477,7 @@ int main()
         int beatenEnemyCnt = 0;
 
         system("cls");
-        
+
         if (i == 0)
         {
             cout << "Moving to First Layer.";
@@ -482,11 +499,13 @@ int main()
 
             while (thisEnemy.getHP() > 0) // Player fights
             {
-                cout << "Current Layer: " << i + 1 << endl << endl;
+                cout << "Current Layer: " << i + 1 << endl
+                     << endl;
                 thisEnemy.printInfo();
                 cout << endl;
                 player.printInfo();
-                cout << endl << "[ Press Enter to Continue... ]" << endl;
+                cout << endl
+                     << "[ Press Enter to Continue... ]" << endl;
                 cin.ignore();
 
                 // Select tool (or fight with bare hands)
@@ -552,7 +571,8 @@ int main()
                     int randAgilityPlayer = randomInt(1, 100);
                     if (randAgilityPlayer < player.getAgility() - thisEnemy.getAgility()) // safe
                     {
-                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl << endl;
+                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl
+                             << endl;
                     }
                     else // hit
                     {
@@ -561,16 +581,18 @@ int main()
                         {
                             double dmg = roundToOneDec(thisEnemy.getCritDmg() * max((1 - player.getDefense() / 100), 0.0));
                             player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl
+                                 << endl;
                         }
                         else // normal hit
                         {
                             double dmg = roundToOneDec(thisEnemy.getAtk() * max((1 - player.getDefense() / 100), 0.0));
                             player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
+                            cout << player.getName() << " loses " << dmg << "HP..." << endl
+                                 << endl;
                         }
                     }
-                    
+
                     if (player.getHP() <= 0) // Player died
                     {
                         time_t endTime = time(0);
@@ -579,14 +601,14 @@ int main()
                         printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n\n");
                         sleep(500);
                         cout << "Game history successfully saved in <history.txt>.";
-                        
+
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
-                    
+
                         char curTime[20];
                         strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
-                        
+
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
@@ -609,9 +631,10 @@ int main()
                     if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
                         player.nullifyItem(selectedIndex);
                     beatenEnemyCnt++;
-                    cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
+                    cout << thisEnemy.getName() << " is beaten!!!" << endl
+                         << endl;
                     sleep(3000);
-                    
+
                     // Choose item as reward before entering next layer
                     if (i + 1 != LAYER_CNT && j == enemyCnt - 1) // not the last layer and the last enemy
                     {
@@ -650,7 +673,7 @@ int main()
                         cout << endl;
                         player.levelUp();
                     }
-                    
+
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt) // Game completion
                     {
                         time_t endTime = time(0);
@@ -691,14 +714,15 @@ int main()
                         cout << " %@@@ -*+=-@=+**+@*++++*+++++=:.=@@@  -+. @@@:@@- " << endl;
                         cout << " %@@@ +***=+#++*+:@     .... :=#+:.-@+ .: *@@@@@- " << endl;
                         cout << " %@@::+****+#+--: @@@@%::-==+=-#@@@@@@@  =@@@@@:+ " << endl;
-                        cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl << endl;
+                        cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl
+                             << endl;
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
-                    
+
                         char curTime[20];
                         strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
-                        
+
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
