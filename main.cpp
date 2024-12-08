@@ -472,7 +472,7 @@ int main()
 
                 // Player fights enemy
                 int randAgilityEnemy = randomInt(1, 100);
-                if (randAgilityEnemy < thisEnemy.getAgility()) // safe
+                if (randAgilityEnemy < thisEnemy.getAgility() - player.getAgility()) // safe
                 {
                     cout << player.getName() << " deals no damage in the attack..." << endl;
                 }
@@ -498,7 +498,7 @@ int main()
                 if (thisEnemy.getHP() > 0)
                 {
                     int randAgilityPlayer = randomInt(1, 100);
-                    if (randAgilityPlayer < player.getAgility()) // safe
+                    if (randAgilityPlayer < player.getAgility() - thisEnemy.getAgility()) // safe
                     {
                         cout << thisEnemy.getName() << " deals no damage in the attack!" << endl << endl;
                     }
