@@ -201,22 +201,22 @@ public:
         this->level += 1;
         cout << this->level << endl;
         cout << "Attack: " << this->atk << " -> ";
-        this->atk = roundToOneDec(atk * 1.2);
+        this->atk = roundToOneDec(atk * 1.25);
         cout << this->atk << endl;
         cout << "Crit Damage: " << this->critDmg << " -> ";
-        this->critDmg = roundToOneDec(critDmg * 1.2);
+        this->critDmg = roundToOneDec(critDmg * 1.25);
         cout << this->critDmg << endl;
         cout << "Crit Chance: " << this->critChance * 100 << "% -> ";
-        this->critChance += 0.01;
+        this->critChance += 0.015;
         cout << this->critChance * 100 << "%" << endl;
         cout << "Agility: " << this->agility << " -> ";
-        this->agility += 1.5;
+        this->agility += 2;
         cout << this->agility << endl;
         cout << "Defense: " << this->defense << " -> ";
-        this->defense = roundToOneDec(defense * 1.15);
+        this->defense = roundToOneDec(defense * 1.2);
         cout << this->defense << endl;
         cout << "HP: " << this->hp << " -> ";
-        this->hp += randomInt(10, 50);
+        this->hp += randomInt(40, 80);
         cout << this->hp << endl;
     };
     void addValues(double atk, double critDmg, double critChance, double agility, double defense, double hp)
