@@ -23,6 +23,16 @@ double roundToOneDec(double num)
     return round(num * 10) / 10.0;
 }
 
+string removeUnderscore(string str)
+{
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (str[i] == '_')
+            str[i] = ' ';
+    }
+    return str;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Item
@@ -91,23 +101,6 @@ void Item::printInfo()
         cout << "   HP: " << hpChange << endl;
     cout << endl;
 }
-
-// Item listing
-Item note7("Note 7", 8, 15, 0.01, 0, 0, 0, 1);
-Item nuclearBomb("Nuclear Bomb", 100, 120, 0.4, 0, 0, -20, 1);
-Item knife("Knife", 5, 10, 0, 0, 0, 0, 2);
-Item freezeDog("Frozen Sausage", 3, 4, 0, 0, 0, 0, 2);
-Item energyDrink("Energy Drink", 0, 0, 0, 0, 0, 50, 3);
-Item hyperEnergyDrink("Hyper Energy Drink", 0, 0, 0, 0, 0, 200, 3);
-Item drone("Drone", 20, 0, 0.1, 0, 0, 0, 1);
-Item map("Map", 0, 0, 0.2, 10, 0, 0, 2);
-Item shield("Shield", 0, 0, 0, 0, 30, 0, 1);
-Item barrier("Barrier", 0, 0, 0, 0, 100, 0, 1);
-Item chocoBar("Chocolate Bar", 2, 0, 0.01, 2, 2, 10, 3);
-Item mysteryFish("Mystery Fish", 1, 0, 0.03, 2, 10, 3, 3);
-Item cppGuideBook("Guide Book for C++ Programming Language", 0, 0, 0.1, 5, 30, 20, 3);
-Item gambleToken("Gamble Token", 0, 9999, -0.08, 0, 0, 0, 1);
-Item godStar("God Star", 1000, 1000, 1, 100, 1000, 1000, 2);
 
 vector<Item> itemList; // a list of all existing items
 
@@ -352,21 +345,24 @@ string colorEnd = "\033[0m";
 int main()
 {
     srand(time(0));
-    itemList.push_back(note7);
-    itemList.push_back(nuclearBomb);
-    itemList.push_back(knife);
-    itemList.push_back(freezeDog);
-    itemList.push_back(godStar);
-    itemList.push_back(energyDrink);
-    itemList.push_back(hyperEnergyDrink);
-    itemList.push_back(drone);
-    itemList.push_back(map);
-    itemList.push_back(shield);
-    itemList.push_back(barrier);
-    itemList.push_back(chocoBar);
-    itemList.push_back(mysteryFish);
-    itemList.push_back(cppGuideBook);
-    itemList.push_back(gambleToken);
+    int itemCnt = 0;
+    fstream itemFile;
+    itemFile.open("items.txt");
+    while (!itemFile.eof())
+    {
+        string itemName;
+        double atkChange;
+        double critChange;
+        double critChanceChange;
+        double agilityChange;
+        double defenseChange;
+        double hpChange;
+        int type;
+        itemFile >> itemName >> atkChange >> critChange >> critChanceChange >> agilityChange >> defenseChange >> hpChange >> type;
+        Item newItem(removeUnderscore(itemName), atkChange, critChange, critChanceChange, agilityChange, defenseChange, hpChange, type);
+        itemList.push_back(newItem);
+        itemCnt++;
+    }
 
     fstream mobFile;
     mobFile.open("mobNames.txt");
@@ -379,7 +375,7 @@ int main()
     }
 
     system("cls");
-    cout << "\x1B[31m! WARNING !\033[0m\n";
+    cout << colorStart(31) << "! WARNING !\n" << colorEnd;
     cout << "This game is a parody of the manga series Girls' Last Tour.\n";
     cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
 
