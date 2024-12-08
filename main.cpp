@@ -33,6 +33,16 @@ string removeUnderscore(string str)
     return str;
 }
 
+string colorStart(int num) {
+    return "\x1B[" + to_string(num) + "m";
+}
+
+string reverseColorStart(int num) {
+    return "\033[" + to_string(num) + "m";
+}
+
+string colorEnd = "\033[0m";
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Item
@@ -49,7 +59,7 @@ protected:
 public:
     Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type);
     void printInfo();
-    // getter from chatgpt
+    // getters
     double getAtkChange() const { return atkChange; }
     double getCritChange() const { return critChange; }
     double getCritChanceChange() const { return critChanceChange; }
@@ -68,13 +78,13 @@ void Item::printInfo()
 {
 
     if (this->type == 1)
-        cout << "PROJECTILE ";
+        cout << reverseColorStart(7) << "PROJECTILE" << colorEnd;
     else if (this->type == 2)
-        cout << "WEAPON ";
+        cout << reverseColorStart(7) << "WEAPON" << colorEnd;
     else if (this->type == 3)
-        cout << "POTION ";
+        cout << reverseColorStart(7) << "POTION" << colorEnd;
 
-    cout << this->name << endl;
+    cout << " " << this->name << endl;
     if (atkChange > 0)
         cout << "   ATK: +" << atkChange << endl;
     else if (atkChange < 0)
@@ -102,9 +112,7 @@ void Item::printInfo()
     cout << endl;
 }
 
-vector<Item> itemList; // a list of all existing items
-
-int options[3] = {0};
+vector<Item> itemList; // a list of all items
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -191,10 +199,10 @@ public:
         this->level += 1;
         cout << this->level << endl;
         cout << "Attack: " << this->atk << " -> ";
-        this->atk *= 1.2;
+        this->atk = roundToOneDec(atk * 1.2);
         cout << this->atk << endl;
         cout << "Crit Damage: " << this->critDmg << " -> ";
-        this->critDmg = atk * 2;
+        this->critDmg = roundToOneDec(critDmg * 1.2);
         cout << this->critDmg << endl;
         cout << "Crit Chance: " << this->critChance * 100 << "% -> ";
         this->critChance += 0.01;
@@ -203,7 +211,7 @@ public:
         this->agility += 1.5;
         cout << this->agility << endl;
         cout << "Defense: " << this->defense << " -> ";
-        this->defense *= 1.15;
+        this->defense = roundToOneDec(defense * 1.15);
         cout << this->defense << endl;
         cout << "HP: " << this->hp << " -> ";
         this->hp += randomInt(10, 50);
@@ -247,7 +255,7 @@ void Player::equipItem(int id)
 
 void Player::printInfo()
 {
-    cout << "PLAYER  " << "Lv. " << this->level << "  " << this->name << endl;
+    cout << reverseColorStart(7) << "PLAYER" << colorEnd << "  Lv. " << this->level << "  " << this->name << endl;
     cout << "  ATK: " << this->atk << endl;
     cout << "  Crit Damage: " << this->critDmg << endl;
     cout << "  Crit Chance: " << this->critChance * 100 << "%" << endl;
@@ -290,13 +298,14 @@ Enemy::Enemy(string name, int layer)
     this->defense = roundToOneDec(3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
     this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
 }
+
 Enemy::~Enemy()
 {
 }
 
 void Enemy::printInfo()
 {
-    cout << "ENEMY  " << "Lv. " << this->level << "  " << this->name << endl;
+    cout << reverseColorStart(7) << "ENEMY" << colorEnd << "  Lv. " << this->level << "  " << this->name << endl;
     cout << "  ATK: " << this->atk << endl;
     cout << "  Crit Damage: " << this->critDmg << endl;
     cout << "  Crit Chance: " << this->critChance * 100 << "%" << endl;
@@ -335,15 +344,10 @@ string formatSeconds(int sec) {
     return twoDigitsOrElse(to_string(hours)) + ":" + twoDigitsOrElse(to_string(minutes)) + ":" + twoDigitsOrElse(to_string(seconds));
 }
 
-string colorStart(int num) {
-    return "\x1B[" + to_string(num) + "m";
-}
-
-string colorEnd = "\033[0m";
-
 
 int main()
 {
+    // generate items
     srand(time(0));
     int itemCnt = 0;
     fstream itemFile;
@@ -363,7 +367,9 @@ int main()
         itemList.push_back(newItem);
         itemCnt++;
     }
+    int options[3] = {0};
 
+    // read enemy names
     fstream mobFile;
     mobFile.open("mobNames.txt");
     vector<string> mobName;
@@ -373,7 +379,8 @@ int main()
         mobFile >> fileInput;
         mobName.push_back(fileInput);
     }
-
+    
+    // Starting menu
     system("cls");
     cout << colorStart(31) << "! WARNING !\n" << colorEnd;
     cout << "This game is a parody of the manga series Girls' Last Tour.\n";
@@ -386,7 +393,7 @@ int main()
 
     system("cls");
 
-    // world building
+    // World building
     printCharByChar("\"Go upwards!\"\n");
     sleep(50);
     printCharByChar("An unclear yet familiar voice resonates in ");
@@ -394,20 +401,58 @@ int main()
     printCharByChar("'s dream.\n");
     sleep(50);
     printCharByChar("At that time, " + player.getName() + " was no older than ten.\n");
-    sleep(10);
+    sleep(50);
     printCharByChar("Food and resources are lacking in the lower layers.\n");
-    sleep(10);
+    sleep(50);
     printCharByChar("The only hope is to move upwards.\n");
-    sleep(10);
+    sleep(50);
     printCharByChar("All " + player.getName() + " can do is to aim for the top layer.\n");
-    sleep(10);
-    printCharByChar("Please lend " + player.getName() + " a helping hand!\n");
-    sleep(1000);
-    cout << colorStart(93) << "[ Press Enter to start the game ]" << colorEnd << endl;
-
-    cin.get();
+    sleep(50);
+    printCharByChar("Please lend " + player.getName() + " a helping hand!\n\n");
+    sleep(500);
+    
+    cout << colorStart(93) << "Enter 1 to directly start the game.\n" << colorEnd;
+    cout << colorStart(93) << "Enter 2 to read instructions before starting the game.\n\n" << colorEnd;
+    int ans = 0;
+    while (true)
+    {
+        string ansInput;
+        cin >> ansInput;
+        try
+        {
+            ans = stoi(ansInput);
+            if (ans < 1 || ans > 2 || ansInput.length() != to_string(ans).length())
+            {
+                throw invalid_argument("Invalid range");
+            }
+            break;
+        }
+        catch (invalid_argument &)
+        {
+            cout << "Invalid input! Please try again: ";
+        }
+    }
+    if (ans == 2)
+    {
+        system("cls");
+        printCharByChar("There are a total of 10 layers. Your goal is to reach the top layer.\n");
+        printCharByChar("There will be 1 to 3 enemies in each layer, which are randomly generated.\n");
+        printCharByChar("You may choose an item as reward after passing each layer.\n");
+        printCharByChar("There are 3 types of items: projectile, weapon, and potion.\n");
+        printCharByChar("Projectile is single-use item, only effective in the round of attack.\n");
+        printCharByChar("Weapon is infinite-use item, also only effective in the round of attack.\n");
+        printCharByChar("Potion is single-use item, values will add to your attributes once obtained.\n");
+        printCharByChar("Enemies will become stronger as you reach higher layer.\n");
+        printCharByChar("Good luck and have fun!\n\n");
+        
+        sleep(500);
+        cout << colorStart(93) << "[ Press Enter to start the game ]" << colorEnd << endl;
+        cin.ignore();
+        cin.get();
+    }
+    
     time_t startTime = time(0);
-    // game
+    // Game
     for (int i = 0; i < LAYER_CNT; i++)
     {
         // Generate random number of enemies
@@ -415,6 +460,19 @@ int main()
         int beatenEnemyCnt = 0;
 
         system("cls");
+        
+        if (i == 0)
+        {
+            cout << "Moving to First Layer.";
+            sleep(1000);
+            system("cls");
+            cout << "Moving to First Layer..";
+            sleep(1000);
+            system("cls");
+            cout << "Moving to First Layer...";
+            sleep(1000);
+            system("cls");
+        }
 
         // Start fighting
         for (int j = 0; j < enemyCnt; j++)
@@ -428,8 +486,7 @@ int main()
                 thisEnemy.printInfo();
                 cout << endl;
                 player.printInfo();
-                cout << endl
-                     << "[ Press Enter to Continue... ]" << endl;
+                cout << endl << "[ Press Enter to Continue... ]" << endl;
                 cin.ignore();
 
                 // Select tool (or fight with bare hands)
@@ -488,7 +545,6 @@ int main()
                         cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
                     }
                 }
-                
 
                 // Enemy fights back if it's alive
                 if (thisEnemy.getHP() > 0)
@@ -518,7 +574,10 @@ int main()
                     if (player.getHP() <= 0) // Player died
                     {
                         time_t endTime = time(0);
-                        cout << player.getName() << " is defeated on layer " << i + 1  << "...\n\n";
+                        sleep(2000);
+                        system("cls");
+                        printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n\n");
+                        sleep(500);
                         cout << "Game history successfully saved in <history.txt>.";
                         
                         // Get current time
@@ -531,7 +590,7 @@ int main()
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
-                        history << curTime << " " << player.getName() << " is deafeted on layer " << i + 1 << " in " << formatSeconds(endTime - startTime) << ".\n";
+                        history << curTime << " " << player.getName() << " is deafeted on layer " << i + 1 << " after a long journey which lasts " << formatSeconds(endTime - startTime) << ".\n";
                         history.close();
                         break;
                     }
@@ -545,14 +604,12 @@ int main()
                         system("cls");
                     }
                 }
-                
                 else // Enemy is beaten
                 {
                     if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
                         player.nullifyItem(selectedIndex);
                     beatenEnemyCnt++;
-                    cout << thisEnemy.getName() << " is beaten!!!" << endl
-                         << endl;
+                    cout << thisEnemy.getName() << " is beaten!!!" << endl << endl;
                     sleep(3000);
                     
                     // Choose item as reward before entering next layer
@@ -599,22 +656,22 @@ int main()
                         time_t endTime = time(0);
                         sleep(2000);
                         system("cls");
-                        cout << "After a long journey, " << player.getName() << " finally reaches the top layer.\n";
+                        printCharByChar("After a long journey, " + player.getName() + " finally reaches the top layer.\n");
                         sleep(2500);
-                        cout << "It's a tranquil and peaceful place covered with white snow.\n";
+                        printCharByChar("It's a tranquil and peaceful place covered with white snow.\n");
                         sleep(2500);
-                        cout << "However, there is no food found on the top layer.\n";
+                        printCharByChar("However, there is no food found on the top layer.\n");
                         sleep(2500);
-                        cout << "With nowhere else to go, " << player.getName() << " decides to enjoy their last days with the remaining food.\n";
+                        printCharByChar("With nowhere else to go, " + player.getName() + " decides to enjoy their last days with the remaining food.\n");
                         sleep(2500);
-                        cout << "\"Living sure has been great...\"\n";
+                        printCharByChar("\"Living sure has been great...\"\n");
                         sleep(2500);
-                        cout << "\"I should eat now and then take a nap. After that, maybe think about something...\"\n";
+                        printCharByChar("\"I should eat now and then take a nap. After that, maybe think about something...\"\n");
                         sleep(2500);
                         cout << endl;
-                        cout << " ###%%%*@@#%%%@@@@@               @@@@@@@=-@@@@@@ " << endl;
-                        cout << " #%%%%%*@@#%@@@@   .=+++++++++++=.  .@@@@@@@@@@@@ " << endl;
-                        cout << " %%%%%%#@@#@@@  .=+=--==++++++++===-  #@@%%%+-@@@ " << endl;
+                        cout << " ###%%%*@@#%%%@@@@@@  +++++++++  @@@@@@@@=-@@@@@@ " << endl;
+                        cout << " #%%%%%*@@#%@@@@@  .=+++++++++++=.  @@@@@@@@@@@@@ " << endl;
+                        cout << " %%%%%%#@@#@@@@ .=+=--==++++++++===-  #@@%%%+-@@@ " << endl;
                         cout << " %%%%%%#@@@@+ .=+==@@@@--+++++++==@@@+  @@@%-%%** " << endl;
                         cout << " %%%%%%#@@@  -+++=@    @-+++++++=@   @+ =@@=%@%%% " << endl;
                         cout << " %%%%%%%@@ .=++++=@   @--+++++++==@@@=-- @+@@%%%% " << endl;
@@ -645,7 +702,7 @@ int main()
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
-                        history << curTime << " " << player.getName() << " reached the top layer in " << formatSeconds(endTime - startTime) << ". Congratulations!!\n";
+                        history << curTime << " " << player.getName() << " reached the top layer after a long journey which lasts " << formatSeconds(endTime - startTime) << ". Congratulations!!\n";
                         history.close();
                         cout << "Game history successfully saved in <history.txt>.";
                     }
