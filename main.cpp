@@ -598,10 +598,10 @@ int main()
                         time_t endTime = time(0);
                         sleep(2000);
                         system("cls");
-                        printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n\n");
-                        sleep(500);
-                        cout << "Game history successfully saved in <history.txt>.";
-
+                        printCharByChar(colorStart(31) + "GAME OVER!\n" + colorEnd);
+                        printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n");
+                        printCharByChar("Have better luck next time!\n");
+                        printCharByChar("- Nuko(?)\n");
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
@@ -614,6 +614,9 @@ int main()
                         history.open("history.txt", ios::app);
                         history << curTime << " " << player.getName() << " is deafeted on layer " << i + 1 << " after a long journey which lasts " << formatSeconds(endTime - startTime) << ".\n";
                         history.close();
+
+                        sleep(500);
+                        cout << "\nGame history successfully saved in <history.txt>.";
                         break;
                     }
                     else
@@ -679,6 +682,8 @@ int main()
                         time_t endTime = time(0);
                         sleep(2000);
                         system("cls");
+                        printCharByChar(colorStart(32) + "YOU WIN!\n" + colorEnd);
+                        sleep(2500);
                         printCharByChar("After a long journey, " + player.getName() + " finally reaches the top layer.\n");
                         sleep(2500);
                         printCharByChar("It's a tranquil and peaceful place covered with white snow.\n");
