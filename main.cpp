@@ -11,7 +11,7 @@
 #include <cmath>
 using namespace std;
 
-const int LAYER_CNT = 20;
+const int LAYER_CNT = 10;
 
 int randomInt(int min, int max)
 {
@@ -176,7 +176,10 @@ public:
     };
     void levelUp()
     {
-        cout << "Level up!" << endl;
+        cout << "[ Level up! ]" << endl;
+        cout << "Level: " << this->level << " -> ";
+        this->level += 1;
+        cout << this->level << endl;
         cout << "Attack: " << this->atk << " -> ";
         this->atk *= 1.2;
         cout << this->atk << endl;
@@ -195,9 +198,6 @@ public:
         cout << "HP: " << this->hp << " -> ";
         this->hp += randomInt(10, 50);
         cout << this->hp << endl;
-        cout << "Level: " << this->level << " -> ";
-        this->level += 1;
-        cout << this->level << endl;
     };
     void addValues (double atk, double critDmg, double critChance, double agility, double defense, double hp)
     {
@@ -303,6 +303,15 @@ void sleep(int ms)
     this_thread::sleep_for(chrono::milliseconds(ms));
 }
 
+void printCharByChar(string text)
+{
+    for (int i = 0; i < text.length(); i++)
+    {
+        cout << text[i];
+        sleep(50);
+    }
+}
+
 int main()
 {
     srand(time(0));
@@ -345,10 +354,12 @@ int main()
     system("cls");
 
     // world building
-    cout << "\"Go upwards!\"" << endl;
-    sleep(10);
-    cout << "An unclear yet familiar voice resonates in " << player.getName() << "'s dream." << endl;
-    sleep(10);
+    printCharByChar("\"Go upwards!\"\n");
+    sleep(50);
+    printCharByChar("An unclear yet familiar voice resonates in ");
+    printCharByChar(player.getName());
+    printCharByChar("'s dream.\n");
+    sleep(50);
     cout << "At that time, " << player.getName() << " was no older than ten." << endl;
     sleep(10);
     cout << "Food and resources are lacking in the lower layers." << endl;
@@ -366,7 +377,7 @@ int main()
     // game
     for (int i = 0; i < LAYER_CNT; i++)
     {
-        // Generate random number of monsters
+        // Generate random number of enemies
         int enemyCnt = randomInt(1, 1);
         int beatenEnemyCnt = 0;
 
@@ -474,7 +485,21 @@ int main()
                     
                     if (player.getHP() <= 0) // Player died
                     {
-                        cout << player.getName() << " is defeated on layer " << i + 1 << "...";
+                        cout << player.getName() << " is defeated on layer " << i + 1 << "...\n\n";
+                        cout << "Game history successfully saved in <history.txt>.";
+                        
+                        // Get current time
+                        time_t now = time(nullptr);
+                        tm *local_time = localtime(&now);
+                    
+                        char curTime[20];
+                        strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
+                        
+                        // output file
+                        ofstream history;
+                        history.open("history.txt", ios::app);
+                        history << curTime << " " << player.getName() << " reached layer " << i + 1 << ".\n";
+                        history.close();
                         break;
                     }
                     else
@@ -501,7 +526,7 @@ int main()
                     // Choose item as reward before entering next layer
                     if (i + 1 != LAYER_CNT)
                     {
-                        cout << "Choose an item to take with you: " << endl;
+                        cout << "Choose an item to obtain: " << endl;
                         // Pick random three numbers not exceeding total item count
                         for (int k = 0; k < 3; k++)
                         {
@@ -575,7 +600,21 @@ int main()
                         cout << " %@@@ -*+=-@=+**+@*++++*+++++=:.=@@@  -+. @@@:@@- " << endl;
                         cout << " %@@@ +***=+#++*+:@     .... :=#+:.-@+ .: *@@@@@- " << endl;
                         cout << " %@@::+****+#+--: @@@@%::-==+=-#@@@@@@@  =@@@@@:+ " << endl;
-                        cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl;
+                        cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl << endl;
+                        cout << "Game history successfully saved in <history.txt>.";
+                        
+                        // Get current time
+                        time_t now = time(nullptr);
+                        tm *local_time = localtime(&now);
+                    
+                        char curTime[20];
+                        strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
+                        
+                        // output file
+                        ofstream history;
+                        history.open("history.txt", ios::app);
+                        history << curTime << " " << player.getName() << " reached the top layer. Congratulations!!\n";
+                        history.close();
                     }
                     else
                     {
