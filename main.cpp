@@ -460,6 +460,7 @@ int main()
         printCharByChar("Weapon is infinite-use item, also only effective in the round of attack.\n");
         printCharByChar("Potion is single-use item, values will add to your attributes once obtained.\n");
         printCharByChar("Enemies will become stronger as you reach higher layer.\n");
+        printCharByChar("And of course, there is a final boss awaits...\n"); 
         printCharByChar("Good luck and have fun!\n\n");
 
         sleep(500);
@@ -474,6 +475,8 @@ int main()
     {
         // Generate random number of enemies
         int enemyCnt = randomInt(1, 2);
+        if (i + 1 == LAYER_CNT)
+            enemyCnt = 1;
         int beatenEnemyCnt = 0;
 
         system("cls");
@@ -490,12 +493,24 @@ int main()
             sleep(1000);
             system("cls");
         }
+        if (i + 1 == LAYER_CNT)
+        {
+            printCharByChar("Oh behold, the guardian of the gold, the dragon of magic light.\n");
+            printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
+            printCharByChar("His name is rrro.\n");
+            printCharByChar("Now, " + player.getName() + " has to fight with him in order to reach the top layer.\n");
+            printCharByChar("It must be an epic fierce battle...");
+            sleep(2000);
+            system("cls");
+        }
 
         // Start fighting
         for (int j = 0; j < enemyCnt; j++)
         {
             // Generate enemy
             Enemy thisEnemy(mobName[randomInt(0, mobName.size() - 1)], i + 1);
+            if (i + 1 == LAYER_CNT)
+                thisEnemy = Enemy("rrro", 150, 300, 0.3, 30, 30, 400);
 
             while (thisEnemy.getHP() > 0) // Player fights
             {
@@ -739,7 +754,7 @@ int main()
                     {
                         if (beatenEnemyCnt < enemyCnt)
                         {
-                            cout << "[ Press Enter to Continue... ]" << endl;
+                            cout << "[ Next Enemy Is Approaching. Press Enter to Continue... ]" << endl;
                             cin.ignore();
                             cin.get();
                             system("cls");
