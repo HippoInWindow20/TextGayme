@@ -18,6 +18,11 @@ int randomInt(int min, int max)
     return min + rand() % (max + 1 - min);
 }
 
+double roundToOneDec(double num)
+{
+    return round(num * 10) / 10.0;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Item
@@ -62,32 +67,44 @@ void Item::printInfo()
     cout << this->name << endl;
     if (atkChange > 0)
         cout << "   ATK: +" << atkChange << endl;
+    else if (atkChange < 0)
+        cout << "   ATK: " << atkChange << endl;
     if (critChange > 0)
         cout << "   Crit Damage: +" << critChange << endl;
+    else if (critChange < 0)
+        cout << "   Crit Damage: " << critChange << endl;
     if (critChanceChange > 0)
         cout << "   Crit Chance: +" << critChanceChange * 100 << "%" << endl;
+    else if (critChanceChange < 0)
+        cout << "   Crit Chance: " << critChanceChange * 100 << "%" << endl;
     if (agilityChange > 0)
         cout << "   Agility: +" << agilityChange << endl;
+    else if (agilityChange < 0)
+        cout << "   Agility: " << agilityChange << endl;
     if (defenseChange > 0)
         cout << "   Defense: +" << defenseChange << endl;
+    else if (defenseChange < 0)
+        cout << "   Defense: " << defenseChange << endl;
     if (hpChange > 0)
         cout << "   HP: +" << hpChange << endl;
+    else if (hpChange < 0)
+        cout << "   HP: " << hpChange << endl;
     cout << endl;
 }
 
 // Item listing
-Item note7("Note 7", 5, 10, 0.01, 0, 0, 0, 1);
+Item note7("Note 7", 8, 15, 0.01, 0, 0, 0, 1);
 Item nuclearBomb("Nuclear Bomb", 100, 120, 0.4, 0, 0, -20, 1);
-Item knife("Knife", 1, 2, 0, 0, 0, 0, 2);
+Item knife("Knife", 5, 10, 0, 0, 0, 0, 2);
 Item freezeDog("Frozen Sausage", 3, 4, 0, 0, 0, 0, 2);
 Item energyDrink("Energy Drink", 0, 0, 0, 0, 0, 50, 3);
 Item hyperEnergyDrink("Hyper Energy Drink", 0, 0, 0, 0, 0, 200, 3);
 Item drone("Drone", 20, 0, 0.1, 0, 0, 0, 1);
-Item map("Map", 0, 0, 0.2, 30, 0, 0, 2);
+Item map("Map", 0, 0, 0.2, 10, 0, 0, 2);
 Item shield("Shield", 0, 0, 0, 0, 30, 0, 1);
 Item barrier("Barrier", 0, 0, 0, 0, 100, 0, 1);
 Item chocoBar("Chocolate Bar", 2, 0, 0.01, 2, 2, 10, 3);
-Item mysteryFish("Mystery Fish", 10, 0, 0.05, 2, 10, 30, 3);
+Item mysteryFish("Mystery Fish", 1, 0, 0.03, 2, 10, 3, 3);
 Item cppGuideBook("Guide Book for C++ Programming Language", 0, 0, 0.1, 5, 30, 20, 3);
 Item gambleToken("Gamble Token", 0, 9999, -0.08, 0, 0, 0, 1);
 Item godStar("God Star", 1000, 1000, 1, 100, 1000, 1000, 2);
@@ -218,7 +235,7 @@ Player::Player(string name)
     this->critChance = 0.1;
     this->agility = 10;
     this->defense = 10;
-    this->hp = 99;
+    this->hp = 200;
     this->level = 1;
     this->exp = 0;
 }
@@ -273,14 +290,13 @@ Enemy::Enemy(string name, int layer)
 {
     this->level = layer;
     this->name = name;
-    this->atk = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4);
-    this->critDmg = atk * 2;
-    this->critChance = 0.1 * pow(level, 2.0 / 5);
-    this->agility = 8 * pow(level, 2.0 / 5);
-    this->defense = 3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3);
-    this->hp = 10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level;
+    this->atk = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4));
+    this->critDmg = roundToOneDec(atk * 2);
+    this->critChance = roundToOneDec(0.1 * pow(level, 2.0 / 5));
+    this->agility = roundToOneDec(8 * pow(level, 2.0 / 5));
+    this->defense = roundToOneDec(3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
+    this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
 }
-
 Enemy::~Enemy()
 {
 }
@@ -295,6 +311,7 @@ void Enemy::printInfo()
     cout << "  Defense: " << this->defense << endl;
     cout << "  HP: " << this->hp << endl;
 }
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -311,6 +328,26 @@ void printCharByChar(string text)
         sleep(50);
     }
 }
+
+string twoDigitsOrElse (string num){
+    if (num.length() == 1)
+        return "0" + num;
+    return num;
+}
+
+string formatSeconds(int sec) {
+    int hours = sec / 3600;
+    int minutes = (sec % 3600) / 60;
+    int seconds = sec % 60;
+    return twoDigitsOrElse(to_string(hours)) + ":" + twoDigitsOrElse(to_string(minutes)) + ":" + twoDigitsOrElse(to_string(seconds));
+}
+
+string colorStart(int num) {
+    return "\x1B[" + to_string(num) + "m";
+}
+
+string colorEnd = "\033[0m";
+
 
 int main()
 {
@@ -342,7 +379,7 @@ int main()
     }
 
     system("cls");
-    cout << "! WARNING !\n";
+    cout << "\x1B[31m! WARNING !\033[0m\n";
     cout << "This game is a parody of the manga series Girls' Last Tour.\n";
     cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
 
@@ -360,25 +397,25 @@ int main()
     printCharByChar(player.getName());
     printCharByChar("'s dream.\n");
     sleep(50);
-    cout << "At that time, " << player.getName() << " was no older than ten." << endl;
+    printCharByChar("At that time, " + player.getName() + " was no older than ten.\n");
     sleep(10);
-    cout << "Food and resources are lacking in the lower layers." << endl;
+    printCharByChar("Food and resources are lacking in the lower layers.\n");
     sleep(10);
-    cout << "The only hope is to move upwards." << endl;
+    printCharByChar("The only hope is to move upwards.\n");
     sleep(10);
-    cout << "All " << player.getName() << " can do is to aim for the top layer." << endl;
+    printCharByChar("All " + player.getName() + " can do is to aim for the top layer.\n");
     sleep(10);
-    cout << "Please lend " << player.getName() << " a helping hand!" << endl;
-    sleep(10);
-    cout << "[ Press Enter to start the game ]" << endl;
+    printCharByChar("Please lend " + player.getName() + " a helping hand!\n");
+    sleep(1000);
+    cout << colorStart(93) << "[ Press Enter to start the game ]" << colorEnd << endl;
 
     cin.get();
-
+    time_t startTime = time(0);
     // game
     for (int i = 0; i < LAYER_CNT; i++)
     {
         // Generate random number of enemies
-        int enemyCnt = randomInt(1, 1);
+        int enemyCnt = randomInt(1, 2);
         int beatenEnemyCnt = 0;
 
         system("cls");
@@ -391,8 +428,7 @@ int main()
 
             while (thisEnemy.getHP() > 0) // Player fights
             {
-                cout << "Current Layer: " << i + 1 << endl
-                     << endl;
+                cout << "Current Layer: " << i + 1 << endl << endl;
                 thisEnemy.printInfo();
                 cout << endl;
                 player.printInfo();
@@ -436,7 +472,7 @@ int main()
 
                 // Player fights enemy
                 int randAgilityEnemy = randomInt(1, 100);
-                if (randAgilityEnemy < thisEnemy.getAgility()) // safe
+                if (randAgilityEnemy < thisEnemy.getAgility() - player.getAgility()) // safe
                 {
                     cout << player.getName() << " deals no damage in the attack..." << endl;
                 }
@@ -445,13 +481,13 @@ int main()
                     int randHitPlayer = randomInt(1, 100);
                     if (randHitPlayer <= player.getCritChance() * 100) // critical hit!
                     {
-                        double dmg = player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                        double dmg = roundToOneDec(player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0));
                         thisEnemy.hit(dmg);
                         cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
                     }
                     else // normal hit
                     {
-                        double dmg = player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0);
+                        double dmg = roundToOneDec(player.getAtk() * max((1 - thisEnemy.getDefense() / 100), 0.0));
                         thisEnemy.hit(dmg);
                         cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
                     }
@@ -462,7 +498,7 @@ int main()
                 if (thisEnemy.getHP() > 0)
                 {
                     int randAgilityPlayer = randomInt(1, 100);
-                    if (randAgilityPlayer < player.getAgility()) // safe
+                    if (randAgilityPlayer < player.getAgility() - thisEnemy.getAgility()) // safe
                     {
                         cout << thisEnemy.getName() << " deals no damage in the attack!" << endl << endl;
                     }
@@ -471,13 +507,13 @@ int main()
                         int randHitEnemy = randomInt(1, 100);
                         if (randHitEnemy <= thisEnemy.getCritChance() * 100) // critical hit!
                         {
-                            double dmg = thisEnemy.getCritDmg() * max((1 - player.getDefense() / 100), 0.0);
+                            double dmg = roundToOneDec(thisEnemy.getCritDmg() * max((1 - player.getDefense() / 100), 0.0));
                             player.hit(dmg);
                             cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
                         }
                         else // normal hit
                         {
-                            double dmg = thisEnemy.getAtk() * max((1 - player.getDefense() / 100), 0.0);
+                            double dmg = roundToOneDec(thisEnemy.getAtk() * max((1 - player.getDefense() / 100), 0.0));
                             player.hit(dmg);
                             cout << player.getName() << " loses " << dmg << "HP..." << endl << endl;
                         }
@@ -485,7 +521,8 @@ int main()
                     
                     if (player.getHP() <= 0) // Player died
                     {
-                        cout << player.getName() << " is defeated on layer " << i + 1 << "...\n\n";
+                        time_t endTime = time(0);
+                        cout << player.getName() << " is defeated on layer " << i + 1  << "...\n\n";
                         cout << "Game history successfully saved in <history.txt>.";
                         
                         // Get current time
@@ -498,7 +535,7 @@ int main()
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
-                        history << curTime << " " << player.getName() << " reached layer " << i + 1 << ".\n";
+                        history << curTime << " " << player.getName() << " is deafeted on layer " << i + 1 << " in " << formatSeconds(endTime - startTime) << ".\n";
                         history.close();
                         break;
                     }
@@ -521,11 +558,11 @@ int main()
                     cout << thisEnemy.getName() << " is beaten!!!" << endl
                          << endl;
                     sleep(3000);
-                    system("cls");
                     
                     // Choose item as reward before entering next layer
-                    if (i + 1 != LAYER_CNT)
+                    if (i + 1 != LAYER_CNT && j == enemyCnt - 1) // not the last layer and the last enemy
                     {
+                        system("cls");
                         cout << "Choose an item to obtain: " << endl;
                         // Pick random three numbers not exceeding total item count
                         for (int k = 0; k < 3; k++)
@@ -563,6 +600,7 @@ int main()
                     
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt) // Game completion
                     {
+                        time_t endTime = time(0);
                         sleep(2000);
                         system("cls");
                         cout << "After a long journey, " << player.getName() << " finally reaches the top layer.\n";
@@ -578,7 +616,7 @@ int main()
                         cout << "\"I should eat now and then take a nap. After that, maybe think about something...\"\n";
                         sleep(2500);
                         cout << endl;
-                        cout << ".###%%%*@@#%%%@@@@@               @@@@@@@=-@@@@@@ " << endl;
+                        cout << " ###%%%*@@#%%%@@@@@               @@@@@@@=-@@@@@@ " << endl;
                         cout << " #%%%%%*@@#%@@@@   .=+++++++++++=.  .@@@@@@@@@@@@ " << endl;
                         cout << " %%%%%%#@@#@@@  .=+=--==++++++++===-  #@@%%%+-@@@ " << endl;
                         cout << " %%%%%%#@@@@+ .=+==@@@@--+++++++==@@@+  @@@%-%%** " << endl;
@@ -601,8 +639,6 @@ int main()
                         cout << " %@@@ +***=+#++*+:@     .... :=#+:.-@+ .: *@@@@@- " << endl;
                         cout << " %@@::+****+#+--: @@@@%::-==+=-#@@@@@@@  =@@@@@:+ " << endl;
                         cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl << endl;
-                        cout << "Game history successfully saved in <history.txt>.";
-                        
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
@@ -613,8 +649,9 @@ int main()
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
-                        history << curTime << " " << player.getName() << " reached the top layer. Congratulations!!\n";
+                        history << curTime << " " << player.getName() << " reached the top layer in " << formatSeconds(endTime - startTime) << ". Congratulations!!\n";
                         history.close();
+                        cout << "Game history successfully saved in <history.txt>.";
                     }
                     else
                     {
