@@ -452,7 +452,7 @@ int main()
     if (ans == 2)
     {
         system("cls");
-        printCharByChar("There are a total of 10 layers. Your goal is to reach the top layer.\n");
+        printCharByChar("There are a total of " + to_string(LAYER_CNT) + " layers. Your goal is to reach the top layer.\n");
         printCharByChar("There will be 1 to 3 enemies in each layer, which are randomly generated.\n");
         printCharByChar("You may choose an item as reward after passing each layer.\n");
         printCharByChar("There are 3 types of items: projectile, weapon, and potion.\n");
@@ -498,14 +498,14 @@ int main()
             printCharByChar("Oh behold, the guardian of the gold, the dragon of magic light.\n");
             printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
             printCharByChar("His name is....\n");
-            cout << "=============================================" << endl;
-            cout << ".__          __                       ._._._." << endl;
-            cout << "|  |   ____ |  | ____ __  ____    ____| | | |" << endl;
-            cout << "|  | _/ ___\|  |/ /  |  \/    \  / ___\ | | |" << endl;
-            cout << "|  |_\  \___|    <|  |  /   |  \/ /_/  >|\|\|" << endl;
-            cout << "|____/\___  >__|_ \____/|___|  /\___  /______" << endl;
-            cout << "        \/     \/          \//_____/ \/\/\/  " << endl;
-            cout << "===================(lckung)==================" << endl;
+            cout << colorStart(33) << "=============================================" << colorEnd << endl;
+            cout << colorStart(33) << ".__          __                       ._._._." << colorEnd << endl;
+            cout << colorStart(33) << "|  |   ____ |  | ____ __  ____    ____| | | |" << colorEnd << endl;
+            cout << colorStart(33) << "|  | _/ ___\\|  |/ /  |  \\/    \\  / ___\\ | | |" << colorEnd << endl;
+            cout << colorStart(33) << "|  |_\\  \\___|    <|  |  /   |  \\/ /_/  >|\\|\\|" << colorEnd << endl;
+            cout << colorStart(33) << "|____/\\___  >__|_ \\____/|___|  /\\___  /______" << colorEnd << endl;
+            cout << colorStart(33) << "        \\/     \\/          \\//_____/ \\/\\/\\/  " << colorEnd << endl;
+            cout << colorStart(33) << "===================(lckung)==================" << colorEnd << endl;
             printCharByChar("Now, " + player.getName() + " has to fight with him in order to reach the top layer.\n");
             printCharByChar("It must be an epic fierce battle...");
             sleep(2000);
@@ -771,13 +771,13 @@ int main()
                         {
                             sleep(5000);
                             system("cls");
-                            cout << "Moving to Next Layer.";
+                            cout << "Moving to Layer " << i+2 << ".";
                             sleep(1000);
                             system("cls");
-                            cout << "Moving to Next Layer..";
+                            cout << "Moving to Layer " << i+2 << "..";
                             sleep(1000);
                             system("cls");
-                            cout << "Moving to Next Layer...";
+                            cout << "Moving to Layer " << i+2 << "...";
                             sleep(1000);
                             system("cls");
                         }
