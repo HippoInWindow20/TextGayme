@@ -497,7 +497,15 @@ int main()
         {
             printCharByChar("Oh behold, the guardian of the gold, the dragon of magic light.\n");
             printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
-            printCharByChar("His name is rrro.\n");
+            printCharByChar("His name is....\n");
+            cout << "=============================================" << endl;
+            cout << ".__          __                       ._._._." << endl;
+            cout << "|  |   ____ |  | ____ __  ____    ____| | | |" << endl;
+            cout << "|  | _/ ___\|  |/ /  |  \/    \  / ___\ | | |" << endl;
+            cout << "|  |_\  \___|    <|  |  /   |  \/ /_/  >|\|\|" << endl;
+            cout << "|____/\___  >__|_ \____/|___|  /\___  /______" << endl;
+            cout << "        \/     \/          \//_____/ \/\/\/  " << endl;
+            cout << "===================(lckung)==================" << endl;
             printCharByChar("Now, " + player.getName() + " has to fight with him in order to reach the top layer.\n");
             printCharByChar("It must be an epic fierce battle...");
             sleep(2000);
@@ -510,7 +518,7 @@ int main()
             // Generate enemy
             Enemy thisEnemy(mobName[randomInt(0, mobName.size() - 1)], i + 1);
             if (i + 1 == LAYER_CNT)
-                thisEnemy = Enemy("rrro", 150, 300, 0.3, 30, 30, 400);
+                thisEnemy = Enemy("lckung", 150, 300, 0.3, 30, 30, 400);
 
             while (thisEnemy.getHP() > 0) // Player fights
             {
