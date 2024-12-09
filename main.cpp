@@ -122,6 +122,7 @@ class Character
 {
 protected:
     string name;
+    int level;
     double atk;
     double critDmg;
     double critChance;
@@ -130,8 +131,6 @@ protected:
     double hp;
 
 public:
-    void attackOpponent(Character *opponent);
-
     string getName();
     double getAtk();
     double getCritDmg();
@@ -141,6 +140,7 @@ public:
     double getHP();
 
     void hit(double dmg);
+    virtual void printInfo();
 };
 
 string Character::getName() { return this->name; }
@@ -156,13 +156,22 @@ void Character::hit(double dmg)
     this->hp = max(hp - dmg, 0.0);
 }
 
+void Character::printInfo()
+{
+    cout << reverseColorStart(7) << "CHARACTER" << colorEnd << "  Lv. " << this->level << "  " << this->name << endl;
+    cout << "  ATK: " << this->atk << endl;
+    cout << "  Crit Damage: " << this->critDmg << endl;
+    cout << "  Crit Chance: " << this->critChance * 100 << "%" << endl;
+    cout << "  Agility: " << this->agility << endl;
+    cout << "  Defense: " << this->defense << endl;
+    cout << "  HP: " << this->hp << endl;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Player : public Character
 {
 protected:
-    int level;
-    int exp;
     vector<Item> handsOn;
 
 public:
@@ -240,7 +249,6 @@ Player::Player(string name)
     this->defense = 10;
     this->hp = 200;
     this->level = 1;
-    this->exp = 0;
 }
 
 Player::~Player()
@@ -280,9 +288,6 @@ void Player::printPossessedItem(int index)
 
 class Enemy : public Character
 {
-protected:
-    int level;
-
 public:
     Enemy(string name, int layer);
     Enemy(string name, double atk, double critDmg, double critChance, double agility, double defense, double hp);
@@ -411,9 +416,7 @@ int main()
     // World building
     printCharByChar("\"Go upwards!\"\n");
     sleep(50);
-    printCharByChar("An unclear yet familiar voice resonates in ");
-    printCharByChar(player.getName());
-    printCharByChar("'s dream.\n");
+    printCharByChar("An unclear yet familiar voice resonates in " + player.getName() + "'s dream.\n");
     sleep(50);
     printCharByChar("At that time, " + player.getName() + " was no older than ten.\n");
     sleep(50);
@@ -483,13 +486,13 @@ int main()
 
         if (i == 0)
         {
-            cout << "Moving to First Layer.";
+            cout << "Moving to Layer 1.";
             sleep(1000);
             system("cls");
-            cout << "Moving to First Layer..";
+            cout << "Moving to Layer 1..";
             sleep(1000);
             system("cls");
-            cout << "Moving to First Layer...";
+            cout << "Moving to Layer 1...";
             sleep(1000);
             system("cls");
         }
@@ -497,15 +500,30 @@ int main()
         {
             printCharByChar("Oh behold, the guardian of the gold, the dragon of magic light.\n");
             printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
-            printCharByChar("His name is....\n");
-            cout << colorStart(33) << "=============================================" << colorEnd << endl;
-            cout << colorStart(33) << ".__          __                       ._._._." << colorEnd << endl;
-            cout << colorStart(33) << "|  |   ____ |  | ____ __  ____    ____| | | |" << colorEnd << endl;
-            cout << colorStart(33) << "|  | _/ ___\\|  |/ /  |  \\/    \\  / ___\\ | | |" << colorEnd << endl;
-            cout << colorStart(33) << "|  |_\\  \\___|    <|  |  /   |  \\/ /_/  >|\\|\\|" << colorEnd << endl;
-            cout << colorStart(33) << "|____/\\___  >__|_ \\____/|___|  /\\___  /______" << colorEnd << endl;
-            cout << colorStart(33) << "        \\/     \\/          \\//_____/ \\/\\/\\/  " << colorEnd << endl;
-            cout << colorStart(33) << "===================(lckung)==================" << colorEnd << endl;
+            printCharByChar("His name is...\n");
+            sleep(100);
+            cout << colorStart(33) << " _____                                             _____ " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << "( ___ )-------------------------------------------( ___ )" << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |                                             |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |   _          _                              |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |  | |   ___  | | __  _   _   _ __     __ _   |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |  | |  / __| | |/ / | | | | | '_ \\   / _` |  |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |  | | | (__  |   <  | |_| | | | | | | (_| |  |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |  |_|  \\___| |_|\\_\\  \\__,_| |_| |_|  \\__, |  |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |   |                                     |___/   |   | " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << " |___|                                             |___| " << colorEnd << endl;
+            sleep(100);
+            cout << colorStart(33) << "(_____)-------------------------------------------(_____)" << colorEnd << endl << endl;
+            sleep(100);
             printCharByChar("Now, " + player.getName() + " has to fight with him in order to reach the top layer.\n");
             printCharByChar("It must be an epic fierce battle...");
             sleep(2000);
@@ -624,7 +642,6 @@ int main()
                         printCharByChar(colorStart(31) + "GAME OVER!\n" + colorEnd);
                         printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n");
                         printCharByChar("Have better luck next time!\n");
-                        printCharByChar("- Nuko(?)\n");
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
@@ -635,7 +652,7 @@ int main()
                         // output file
                         ofstream history;
                         history.open("history.txt", ios::app);
-                        history << curTime << " " << player.getName() << " is deafeted on layer " << i + 1 << " after a long journey which lasts " << formatSeconds(endTime - startTime) << ".\n";
+                        history << curTime << " " << player.getName() << " is defeated on layer " << i + 1 << " after a long journey which lasts " << formatSeconds(endTime - startTime) << ".\n";
                         history.close();
 
                         sleep(500);
@@ -694,7 +711,7 @@ int main()
                             }
                         }
                         player.equipItem(options[choice - 1]);
-                        cout << "Congrats! You have obtained:" << endl;
+                        cout << "Congrats! You have obtained: " << endl;
                         itemList[options[choice - 1]].printInfo();
                         cout << endl;
                         player.levelUp();
@@ -705,20 +722,14 @@ int main()
                         time_t endTime = time(0);
                         sleep(2000);
                         system("cls");
-                        printCharByChar(colorStart(32) + "YOU WIN!\n" + colorEnd);
-                        sleep(2500);
+                        printCharByChar(colorStart(32) + "CONGRATULATIONS!\n" + colorEnd);
                         printCharByChar("After a long journey, " + player.getName() + " finally reaches the top layer.\n");
-                        sleep(2500);
                         printCharByChar("It's a tranquil and peaceful place covered with white snow.\n");
-                        sleep(2500);
                         printCharByChar("However, there is no food found on the top layer.\n");
-                        sleep(2500);
                         printCharByChar("With nowhere else to go, " + player.getName() + " decides to enjoy their last days with the remaining food.\n");
-                        sleep(2500);
                         printCharByChar("\"Living sure has been great...\"\n");
-                        sleep(2500);
                         printCharByChar("\"I should eat now and then take a nap. After that, maybe think about something...\"\n");
-                        sleep(2500);
+                        sleep(2000);
                         cout << endl;
                         cout << " ###%%%*@@#%%%@@@@@@  +++++++++  @@@@@@@@=-@@@@@@ " << endl;
                         cout << " #%%%%%*@@#%@@@@@  .=+++++++++++=.  @@@@@@@@@@@@@ " << endl;
@@ -771,13 +782,13 @@ int main()
                         {
                             sleep(5000);
                             system("cls");
-                            cout << "Moving to Layer " << i+2 << ".";
+                            cout << "Moving to Layer " << i + 2 << ".";
                             sleep(1000);
                             system("cls");
-                            cout << "Moving to Layer " << i+2 << "..";
+                            cout << "Moving to Layer " << i + 2 << "..";
                             sleep(1000);
                             system("cls");
-                            cout << "Moving to Layer " << i+2 << "...";
+                            cout << "Moving to Layer " << i + 2 << "...";
                             sleep(1000);
                             system("cls");
                         }
