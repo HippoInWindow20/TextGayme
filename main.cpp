@@ -415,17 +415,11 @@ int main()
 
     // World building
     printCharByChar("\"Go upwards!\"\n");
-    sleep(50);
     printCharByChar("An unclear yet familiar voice resonates in " + player.getName() + "'s dream.\n");
-    sleep(50);
     printCharByChar("At that time, " + player.getName() + " was no older than ten.\n");
-    sleep(50);
     printCharByChar("Food and resources are lacking in the lower layers.\n");
-    sleep(50);
     printCharByChar("The only hope is to move upwards.\n");
-    sleep(50);
     printCharByChar("All " + player.getName() + " can do is to aim for the top layer.\n");
-    sleep(50);
     printCharByChar("Please lend " + player.getName() + " a helping hand!\n\n");
     sleep(500);
 
@@ -678,8 +672,8 @@ int main()
                          << endl;
                     sleep(3000);
 
-                    // Choose item as reward before entering next layer
-                    if (i + 1 != LAYER_CNT && j == enemyCnt - 1) // not the last layer and the last enemy
+                    // Choose item as reward before fighting with next enemy / entering next layer
+                    if (i + 1 != LAYER_CNT) // not the last layer
                     {
                         system("cls");
                         cout << "Choose an item to obtain: " << endl;
@@ -714,7 +708,9 @@ int main()
                         cout << "Congrats! You have obtained: " << endl;
                         itemList[options[choice - 1]].printInfo();
                         cout << endl;
-                        player.levelUp();
+                        
+                        if (j == enemyCnt - 1)
+                            player.levelUp();
                     }
 
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt) // Game completion
