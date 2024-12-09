@@ -216,16 +216,16 @@ public:
         this->critDmg = roundToOneDec(critDmg * 1.25);
         cout << this->critDmg << endl;
         cout << "Crit Chance: " << this->critChance * 100 << "% -> ";
-        this->critChance += 0.015;
+        this->critChance += 0.012;
         cout << this->critChance * 100 << "%" << endl;
         cout << "Agility: " << this->agility << " -> ";
         this->agility += 2;
         cout << this->agility << endl;
         cout << "Defense: " << this->defense << " -> ";
-        this->defense = roundToOneDec(defense * 1.2);
+        this->defense = roundToOneDec(defense * 1.12);
         cout << this->defense << endl;
         cout << "HP: " << this->hp << " -> ";
-        this->hp += randomInt(40, 80);
+        this->hp += randomInt(level * 10, level * 15);
         cout << this->hp << endl;
     };
     void addValues(double atk, double critDmg, double critChance, double agility, double defense, double hp)
@@ -302,7 +302,7 @@ Enemy::Enemy(string name, int layer)
     this->atk = roundToOneDec(9 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 5));
     this->critDmg = roundToOneDec(atk * 2);
     this->critChance = roundToOneDec(0.1 * pow(level, 2.0 / 5));
-    this->agility = roundToOneDec(8 * pow(level, 2.0 / 5));
+    this->agility = roundToOneDec(8 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 5));
     this->defense = roundToOneDec(4.5 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
     this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
 }
@@ -680,7 +680,10 @@ int main()
                         // Pick random three numbers not exceeding total item count
                         for (int k = 0; k < 3; k++)
                         {
-                            options[k] = randomInt(0, itemList.size() - 1);
+                            if (i <= 4)
+                                options[k] = randomInt(0, itemList.size() - 7); // 6 items exclusive for layer 6 - 9
+                            else
+                                options[k] = randomInt(5, itemList.size() - 1); // 5 items exclusive for layer 1 - 5
                             sleep(500);
                             cout << k + 1 << ") ";
                             itemList[options[k]].printInfo();
