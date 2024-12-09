@@ -294,11 +294,11 @@ Enemy::Enemy(string name, int layer)
 {
     this->level = layer;
     this->name = name;
-    this->atk = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 4));
+    this->atk = roundToOneDec(9 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 5));
     this->critDmg = roundToOneDec(atk * 2);
     this->critChance = roundToOneDec(0.1 * pow(level, 2.0 / 5));
     this->agility = roundToOneDec(8 * pow(level, 2.0 / 5));
-    this->defense = roundToOneDec(3 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
+    this->defense = roundToOneDec(4.5 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
     this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
 }
 // Enemy constructor with custom values
@@ -569,7 +569,7 @@ int main()
                 int randAgilityEnemy = randomInt(1, 100);
                 if (randAgilityEnemy < thisEnemy.getAgility() - player.getAgility()) // safe
                 {
-                    cout << player.getName() << " deals no damage in the attack..." << endl;
+                    cout << thisEnemy.getName() << " dodged " << player.getName() << "'s attack!" << endl;
                 }
                 else // hit
                 {
@@ -578,7 +578,7 @@ int main()
                     {
                         double dmg = roundToOneDec(player.getCritDmg() * max((1 - thisEnemy.getDefense() / 100), 0.0));
                         thisEnemy.hit(dmg);
-                        cout << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
+                        cout << "Crit! " << thisEnemy.getName() << " loses " << dmg << "HP!" << endl;
                     }
                     else // normal hit
                     {
@@ -594,7 +594,7 @@ int main()
                     int randAgilityPlayer = randomInt(1, 100);
                     if (randAgilityPlayer < player.getAgility() - thisEnemy.getAgility()) // safe
                     {
-                        cout << thisEnemy.getName() << " deals no damage in the attack!" << endl
+                        cout << player.getName() << " dodged " << thisEnemy.getName() << "'s attack!" << endl
                              << endl;
                     }
                     else // hit
@@ -604,7 +604,7 @@ int main()
                         {
                             double dmg = roundToOneDec(thisEnemy.getCritDmg() * max((1 - player.getDefense() / 100), 0.0));
                             player.hit(dmg);
-                            cout << player.getName() << " loses " << dmg << "HP..." << endl
+                            cout << "Crit! " << player.getName() << " loses " << dmg << "HP..." << endl
                                  << endl;
                         }
                         else // normal hit
