@@ -450,13 +450,13 @@ int main()
     {
         system("cls");
         printCharByChar("There are a total of " + to_string(LAYER_CNT) + " layers. Your goal is to reach the top layer.\n");
-        printCharByChar("There will be 1 to 3 enemies in each layer, which are randomly generated.\n");
-        printCharByChar("You may choose an item as reward after passing each layer.\n");
+        printCharByChar("There are 1 or 2 randomly decided enemies on each layer.\n");
+        printCharByChar("You may choose an item as reward after defeating each enemy.\n");
         printCharByChar("There are 3 types of items: projectile, weapon, and potion.\n");
         printCharByChar("Projectile is single-use item, only effective in the round of attack.\n");
         printCharByChar("Weapon is infinite-use item, also only effective in the round of attack.\n");
         printCharByChar("Potion is single-use item, values will add to your attributes once obtained.\n");
-        printCharByChar("Enemies will become stronger as you reach higher layer.\n");
+        printCharByChar("Enemies will become stronger as you reach higher layers.\n");
         printCharByChar("And of course, there is a final boss awaits...\n"); 
         printCharByChar("Good luck and have fun!\n\n");
 
