@@ -15,7 +15,7 @@ int main()
     srand(time(0));
     int itemCnt = 0;
     fstream itemFile;
-    itemFile.open("sources/items.txt");
+    itemFile.open("items.txt");
     while (!itemFile.eof())
     {
         string itemName;
@@ -35,7 +35,7 @@ int main()
 
     // read enemy names
     fstream mobFile;
-    mobFile.open("sources/mobNames.txt");
+    mobFile.open("mobNames.txt");
     vector<string> mobName;
     string fileInput;
     while (!mobFile.eof())
@@ -46,10 +46,7 @@ int main()
 
     // Starting menu
     system("cls");
-    cout << colorStart(31) << "! WARNING !\n"
-         << colorEnd;
-    cout << "This game is a parody of the manga series Girls' Last Tour.\n";
-    cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
+    
 
     string name;
     cout << "Please name your character: ";
