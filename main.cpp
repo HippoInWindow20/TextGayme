@@ -179,8 +179,8 @@ int main()
 
             while (thisEnemy.getHP() > 0) // Player fights
             {
-                cout << "Current Layer: " << i + 1 << endl
-                     << endl;
+                cout << "Current Layer: " << i + 1 << endl;
+                cout << "Eneny In This Layer: " << j+1 << '/' << enemyCnt << endl << endl;
                 thisEnemy.printInfo();
                 cout << endl;
                 player.printInfo();
