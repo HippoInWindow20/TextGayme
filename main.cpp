@@ -15,7 +15,7 @@ int main()
     srand(time(0));
     int itemCnt = 0;
     fstream itemFile;
-    itemFile.open("items.txt");
+    itemFile.open("sources/items.txt");
     while (!itemFile.eof())
     {
         string itemName;
@@ -35,7 +35,7 @@ int main()
 
     // read enemy names
     fstream mobFile;
-    mobFile.open("mobNames.txt");
+    mobFile.open("sources/mobNames.txt");
     vector<string> mobName;
     string fileInput;
     while (!mobFile.eof())
