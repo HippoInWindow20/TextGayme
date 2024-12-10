@@ -279,8 +279,16 @@ int main()
                         sleep(2000);
                         system("cls");
                         printCharByChar(colorStart(31) + "GAME OVER!\n" + colorEnd);
-                        printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n");
-                        printCharByChar("Have better luck next time!\n");
+                        if (i + 1 == LAYER_CNT){
+                            printCharByChar("Maybe Homework 10 is too hard for you...\n");
+                            printCharByChar("lckung gives you an F for this course...\n");
+                            printCharByChar("You can enroll this course next year!\n");
+                            printCharByChar("But I'm worried about your GPA...\n");
+                        }
+                        else {
+                            printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n");
+                            printCharByChar("The journey ends here... Have better luck next time!\n");
+                        }
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
