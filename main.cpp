@@ -1,15 +1,7 @@
-#include <iostream>
-#include <string>
-#include <limits>
-#include <thread> // for sleep feature
-#include <chrono> // for sleep feature
+#include "character.h"
 #include <stdlib.h>
 #include <cstdlib>
-#include <ctime>
-#include <vector>
 #include <fstream>
-#include <cmath>
-#include "character.h"
 
 using namespace std;
 

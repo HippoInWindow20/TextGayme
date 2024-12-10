@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 #include "item.h"
+
 using namespace std;
 
 class Character
