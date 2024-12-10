@@ -1,4 +1,3 @@
-# TextGayme
+# TextGame
 
-No gay allowed lol
-JK we're *gender-inclusive*
+This game will take around 10 minutes. This will be a great game.
