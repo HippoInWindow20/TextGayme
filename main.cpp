@@ -47,14 +47,21 @@ int main()
     // Starting menu
     system("cls");
     cout << colorStart(33) << " \"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\" \n" << colorEnd; 
-    cout << colorStart(33) << "(      ____ _   ___   ___ ____    _        _    ____ _____   _____ ___  _   _ ____        )\n" << colorEnd; 
+    sleep(50);
+    cout << colorStart(33) << "(      ____ _   ___   ___ ____    _        _    ____ _____   _____ ___  _   _ ____        )\n" << colorEnd;
+    sleep(50); 
     cout << colorStart(33) << " )    / ___| | | \\ \\ / ( ) ___|  | |      / \\  / ___|_   _| |_   _/ _ \\| | | |  _ \\      ( \n" << colorEnd; 
+    sleep(50);
     cout << colorStart(33) << "(    | |  _| | | |\\ V /|/\\___ \\  | |     / _ \\ \\___ \\ | |     | || | | | | | | |_) |      )\n" << colorEnd; 
+    sleep(50);
     cout << colorStart(33) << " )   | |_| | |_| | | |    ___) | | |___ / ___ \\ ___) || |     | || |_| | |_| |  _ <      ( \n" << colorEnd; 
+    sleep(50);
     cout << colorStart(33) << "(     \\____|\\___/  |_|   |____/  |_____/_/   \\_\\____/ |_|     |_| \\___/ \\___/|_| \\_\\      )\n" << colorEnd; 
+    sleep(50);
     cout << colorStart(33) << " )                                                                                       ( \n" << colorEnd; 
-    cout << colorStart(33) << " \"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\" \n\n" << colorEnd; 
-
+    sleep(50);
+    cout << colorStart(33) << " \"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\" \n\n" << colorEnd << endl << endl; 
+    sleep(50);
     string name;
     cout << "Please name your character: ";
     getline(cin, name);
@@ -110,7 +117,7 @@ int main()
         printCharByChar("Good luck and have fun!\n\n");
 
         sleep(500);
-        cout << colorStart(93) << "[ Press Enter to start the game ]" << colorEnd << endl;
+        cout << colorStart(93) << "[ Press Enter to Start the Game ]" << colorEnd << endl;
         cin.ignore();
         cin.get();
     }
