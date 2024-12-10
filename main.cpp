@@ -46,11 +46,14 @@ int main()
 
     // Starting menu
     system("cls");
-    //Placeholder for the title
-    cout << colorStart(31) << "! WARNING !\n"
-         << colorEnd;
-    cout << "This game is a parody of the manga series Girls' Last Tour.\n";
-    cout << "It contains major spoilers for the series. However, keep in mind that some elements aren't based on the series.\n\n";
+    cout << colorStart(33) << " \"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\" \n" << colorEnd; 
+    cout << colorStart(33) << "(      ____ _   ___   ___ ____    _        _    ____ _____   _____ ___  _   _ ____        )\n" << colorEnd; 
+    cout << colorStart(33) << " )    / ___| | | \\ \\ / ( ) ___|  | |      / \\  / ___|_   _| |_   _/ _ \\| | | |  _ \\      ( \n" << colorEnd; 
+    cout << colorStart(33) << "(    | |  _| | | |\\ V /|/\\___ \\  | |     / _ \\ \\___ \\ | |     | || | | | | | | |_) |      )\n" << colorEnd; 
+    cout << colorStart(33) << " )   | |_| | |_| | | |    ___) | | |___ / ___ \\ ___) || |     | || |_| | |_| |  _ <      ( \n" << colorEnd; 
+    cout << colorStart(33) << "(     \\____|\\___/  |_|   |____/  |_____/_/   \\_\\____/ |_|     |_| \\___/ \\___/|_| \\_\\      )\n" << colorEnd; 
+    cout << colorStart(33) << " )                                                                                       ( \n" << colorEnd; 
+    cout << colorStart(33) << " \"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\"+.+\" \n\n" << colorEnd; 
 
     string name;
     cout << "Please name your character: ";
