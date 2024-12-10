@@ -225,7 +225,7 @@ public:
         this->defense = roundToOneDec(defense * 1.12);
         cout << this->defense << endl;
         cout << "HP: " << this->hp << " -> ";
-        this->hp += randomInt(level * 10, level * 15);
+        this->hp += randomInt(sqrt(level) * 10, sqrt(level) * 15);
         cout << this->hp << endl;
     };
     void addValues(double atk, double critDmg, double critChance, double agility, double defense, double hp)
@@ -299,16 +299,17 @@ Enemy::Enemy(string name, int layer)
 {
     this->level = layer;
     this->name = name;
-    this->atk = roundToOneDec(9 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 3.0 / 5));
+    this->atk = roundToOneDec(9 * (1 + (static_cast<double>(rand()) / RAND_MAX) / 2) * pow(level, 3.0 / 5));
     this->critDmg = roundToOneDec(atk * 2);
     this->critChance = roundToOneDec(0.1 * pow(level, 2.0 / 5));
-    this->agility = roundToOneDec(8 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 5));
-    this->defense = roundToOneDec(4.5 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * pow(level, 2.0 / 3));
-    this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX)) * level);
+    this->agility = roundToOneDec(8 * (1 + (static_cast<double>(rand()) / RAND_MAX) / 2) * pow(level, 2.0 / 5));
+    this->defense = roundToOneDec(4.5 * (1 + (static_cast<double>(rand()) / RAND_MAX) / 2) * pow(level, 2.0 / 3));
+    this->hp = roundToOneDec(10 * (1 + (static_cast<double>(rand()) / RAND_MAX) / 2) * level);
 }
 // Enemy constructor with custom values
 Enemy::Enemy(string name, double atk, double critDmg, double critChance, double agility, double defense, double hp)
 {
+    this->level = 10;
     this->name = name;
     this->atk = atk;
     this->critDmg = critDmg;
