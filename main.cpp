@@ -492,7 +492,7 @@ int main()
         }
         if (i + 1 == LAYER_CNT)
         {
-            printCharByChar("Oh behold, the guardian of the gold, the dragon of magic light.\n");
+            printCharByChar("Oh, behold the guardian of the gold, the dragon of magic light.\n");
             printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
             printCharByChar("His name is...\n");
             sleep(100);
