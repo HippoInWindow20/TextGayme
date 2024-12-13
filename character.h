@@ -28,7 +28,7 @@ public:
     double getHP() const;
 
     void hit(double dmg); // character gets hit
-    virtual void printInfo();
+    virtual void printInfo() = 0;
 };
 
 string Character::getName() const { return this->name; }
@@ -42,17 +42,6 @@ double Character::getHP() const { return hp; }
 void Character::hit(double dmg)
 {
     this->hp = max(this->hp - dmg, 0.0);
-}
-
-void Character::printInfo()
-{
-    cout << reverseColorStart(7) << "CHARACTER" << colorEnd << "  Lv. " << this->level << "  " << this->name << endl;
-    cout << "  ATK: " << this->atk << endl;
-    cout << "  Crit Damage: " << this->critDmg << endl;
-    cout << "  Crit Chance: " << this->critChance * 100 << "%" << endl;
-    cout << "  Agility: " << this->agility << endl;
-    cout << "  Defense: " << this->defense << endl;
-    cout << "  HP: " << this->hp << endl;
 }
 
 ////////////////////////////////////////////////////////////////////
