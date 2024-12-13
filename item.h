@@ -4,8 +4,6 @@
 #include <vector>
 using namespace std;
 
-
-
 class Item
 {
 protected:
@@ -19,15 +17,15 @@ protected:
     int type; // 1 for projectile, 2 for weapon, 3 for potion
 public:
     Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type);
-    void printInfo();
+    void printInfo(); // print item info
     // getters
-    double getAtkChange() const { return atkChange; }
-    double getCritChange() const { return critChange; }
-    double getCritChanceChange() const { return critChanceChange; }
-    double getAgilityChange() const { return agilityChange; }
-    double getDefenseChange() const { return defenseChange; }
-    double getHpChange() const { return hpChange; }
-    int getType() const { return type; }
+    double getAtkChange() const;
+    double getCritChange() const;
+    double getCritChanceChange() const;
+    double getAgilityChange() const;
+    double getDefenseChange() const;
+    double getHpChange() const;
+    int getType() const;
 };
 
 Item::Item(string name, double atkChange, double critChange, double critChanceChange, double agilityChange, double defenseChange, double hpChange, int type) : name(name), atkChange(atkChange), critChange(critChange), critChanceChange(critChanceChange), agilityChange(agilityChange),
@@ -72,3 +70,11 @@ void Item::printInfo()
         cout << "   HP: " << hpChange << endl;
     cout << endl;
 }
+
+double Item::getAtkChange() const { return atkChange; }
+double Item::getCritChange() const { return critChange; }
+double Item::getCritChanceChange() const { return critChanceChange; }
+double Item::getAgilityChange() const { return agilityChange; }
+double Item::getDefenseChange() const { return defenseChange; }
+double Item::getHpChange() const { return hpChange; }
+int Item::getType() const { return type; }

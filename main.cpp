@@ -11,8 +11,9 @@ vector<Item> itemList; // a list of all items
 
 int main()
 {
-    // generate items
     srand(time(0));
+    
+    // Load items
     int itemCnt = 0;
     fstream itemFile;
     itemFile.open("sources/items.txt");
@@ -33,7 +34,7 @@ int main()
     }
     int options[3] = {0};
 
-    // read enemy names
+    // Load enemy names
     fstream mobFile;
     mobFile.open("sources/mobNames.txt");
     vector<string> mobName;
@@ -69,7 +70,7 @@ int main()
 
     system("cls");
 
-    // World building
+    // Initial story
     printCharByChar("\"Go upwards!\"\n");
     printCharByChar("An unclear yet familiar voice resonates in " + player.getName() + "'s dream.\n");
     printCharByChar("At that time, " + player.getName() + " was no older than ten.\n");
@@ -83,6 +84,8 @@ int main()
          << colorEnd;
     cout << colorStart(93) << "Enter 2 to read instructions before starting the game.\n\n"
          << colorEnd;
+    
+    // Read user's choice
     int ans = 0;
     while (true)
     {
@@ -102,7 +105,7 @@ int main()
             cout << "Invalid input! Please try again: ";
         }
     }
-    if (ans == 2)
+    if (ans == 2) // Show game instructions
     {
         system("cls");
         printCharByChar("There are a total of " + to_string(LAYER_CNT) + " layers. Your goal is to reach the top layer.\n");
@@ -122,7 +125,7 @@ int main()
         cin.get();
     }
 
-    time_t startTime = time(0);
+    time_t startTime = time(0); // Record game start time
     // Game
     for (int i = 0; i < LAYER_CNT; i++)
     {
@@ -130,6 +133,7 @@ int main()
         int enemyCnt = randomInt(1, 2);
         if (i + 1 == LAYER_CNT)
             enemyCnt = 1;
+        
         int beatenEnemyCnt = 0;
 
         system("cls");
@@ -146,7 +150,7 @@ int main()
             sleep(1000);
             system("cls");
         }
-        if (i + 1 == LAYER_CNT)
+        if (i + 1 == LAYER_CNT) // Special story when final boss appears
         {
             printCharByChar("Oh, behold the guardian of the gold, the dragon of magic light.\n");
             printCharByChar("In front of " + player.getName() + " is our legend, our hero.\n");
@@ -188,8 +192,9 @@ int main()
             if (i + 1 == LAYER_CNT)
                 thisEnemy = Enemy(i + 1, "lckung", 150, 300, 0.3, 30, 30, 400);
 
-            while (thisEnemy.getHP() > 0) // Player fights
+            while (thisEnemy.getHP() > 0)
             {
+                // Print info
                 cout << "Current Layer: " << i + 1 << endl;
                 cout << "Eneny In This Layer: " << j+1 << '/' << enemyCnt << endl << endl;
                 thisEnemy.printInfo();
@@ -199,7 +204,7 @@ int main()
                      << "[ Press Enter to Continue... ]" << endl;
                 cin.ignore();
 
-                // Select tool (or fight with bare hands)
+                // Select tool to fight (or fight with bare hands)
                 cout << endl
                      << "Select a tool to fight with " << thisEnemy.getName() << ":" << endl;
                 for (int k = 1; k <= player.getItemCnt(); k++)
@@ -209,7 +214,7 @@ int main()
                 }
                 cout << player.getItemCnt() + 1 << ") Bare hands" << endl;
 
-                // Equip item
+                // Read user's choice to use item
                 int selectedIndex = 0;
                 while (true)
                 {
@@ -286,20 +291,23 @@ int main()
 
                     if (player.getHP() <= 0) // Player died
                     {
-                        time_t endTime = time(0);
+                        time_t endTime = time(0); // Record game end time
                         sleep(2000);
                         system("cls");
                         printCharByChar(colorStart(31) + "GAME OVER!\n" + colorEnd);
-                        if (i + 1 == LAYER_CNT){
+                        if (i + 1 == LAYER_CNT) // Special story when beaten by final boss
+                        {
                             printCharByChar("Maybe Homework 10 is too hard for you...\n");
                             printCharByChar("lckung gives you an F for this course...\n");
                             printCharByChar("You can enroll this course next year!\n");
                             printCharByChar("But I'm worried about your GPA...\n");
                         }
-                        else {
+                        else
+                        {
                             printCharByChar(player.getName() + " is defeated on layer " + to_string(i + 1) + "...\n");
                             printCharByChar("The journey ends here... Have better luck next time!\n");
                         }
+                        
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
@@ -307,7 +315,7 @@ int main()
                         char curTime[20];
                         strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
 
-                        // output file
+                        // Output game history
                         ofstream history;
                         history.open("history.txt", ios::app);
                         history << curTime << " " << player.getName() << " is defeated on layer " << i + 1 << " after a long journey which lasts " << formatSeconds(endTime - startTime) << ".\n";
@@ -317,7 +325,7 @@ int main()
                         cout << "\nGame history successfully saved in <history.txt>.";
                         break;
                     }
-                    else
+                    else // Player is alive, continue the fight
                     {
                         if (selectedIndex != player.getItemCnt() + 1) // not fight with bare hands
                             player.nullifyItem(selectedIndex);
@@ -341,7 +349,8 @@ int main()
                     {
                         system("cls");
                         cout << "Choose an item to obtain: " << endl;
-                        // Pick random three numbers not exceeding total item count
+                        
+                        // Pick three random items for user to select
                         for (int k = 0; k < 3; k++)
                         {
                             if (i <= 4)
@@ -352,6 +361,8 @@ int main()
                             cout << k + 1 << ") ";
                             itemList[options[k]].printInfo();
                         }
+                        
+                        // Read user's choice and equip item
                         int choice = 0;
                         while (true)
                         {
@@ -376,13 +387,14 @@ int main()
                         itemList[options[choice - 1]].printInfo();
                         cout << endl;
                         
+                        // If the last enemy on the layer is beaten, player level up
                         if (j == enemyCnt - 1)
                             player.levelUp();
                     }
 
                     if (i + 1 == LAYER_CNT && beatenEnemyCnt == enemyCnt) // Game completion
                     {
-                        time_t endTime = time(0);
+                        time_t endTime = time(0); // Record game end timeS
                         sleep(2000);
                         system("cls");
                         printCharByChar(colorStart(32) + "CONGRATULATIONS!\n" + colorEnd);
@@ -418,6 +430,7 @@ int main()
                         cout << " %@@::+****+#+--: @@@@%::-==+=-#@@@@@@@  =@@@@@:+ " << endl;
                         cout << " ::=         @ @ @@@@%@@@@@@@@@@@%#**+*@@@@%+*@#  " << endl
                              << endl;
+                        
                         // Get current time
                         time_t now = time(nullptr);
                         tm *local_time = localtime(&now);
@@ -425,7 +438,7 @@ int main()
                         char curTime[20];
                         strftime(curTime, sizeof(curTime), "%Y-%m-%d %H:%M:%S", local_time);
 
-                        // output file
+                        // Output game history
                         ofstream history;
                         history.open("history.txt", ios::app);
                         history << curTime << " " << player.getName() << " reached the top layer after a long journey which lasts " << formatSeconds(endTime - startTime) << ". Congratulations!!\n";
